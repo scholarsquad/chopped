@@ -25,6 +25,12 @@
             overflow: hidden;
             display: flex;
             flex-direction: row;
+
+            /* --- FIX: PREVENT HIGHLIGHTING --- */
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none;    /* Firefox */
+            -ms-user-select: none;     /* IE10+/Edge */
+            user-select: none;         /* Standard */
         }
 
         /* --- CENTER PANEL: THE GAME --- */
@@ -51,6 +57,7 @@
             -webkit-text-fill-color: transparent;
             display: block;
             text-shadow: 0 10px 30px rgba(112, 161, 255, 0.3);
+            cursor: default;
         }
 
         #cps {
@@ -58,6 +65,7 @@
             color: #a4b0be;
             font-weight: 300;
             letter-spacing: 1px;
+            cursor: default;
         }
 
         .click-area {
@@ -81,6 +89,8 @@
             transition: transform 0.05s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             z-index: 10;
+            /* Extra safety for the button specifically */
+            -webkit-user-drag: none;
         }
 
         #mainButton:active {
@@ -94,6 +104,7 @@
             object-fit: cover;
             display: none;
             pointer-events: none;
+            -webkit-user-drag: none;
         }
 
         #placeholder {
@@ -144,6 +155,7 @@
             border-bottom: 2px solid var(--glass-border);
             padding-bottom: 15px;
             margin-bottom: 20px;
+            cursor: default;
         }
 
         .store-list {
