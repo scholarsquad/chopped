@@ -251,19 +251,19 @@
             color: white; text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
             z-index: 20;
         }
-        
-         @keyframes floatUp {
+
+        @keyframes floatUp {
             0% { transform: translateY(0) scale(0.5); opacity: 1; }
-            50% { transform: translateY(-40px) scale(1.2); opacity: 1; }
+            50% { transform: translateY(-40px) scale(1.2); opacity: 1; } /* The "pop" effect */
             100% { transform: translateY(-100px) scale(1); opacity: 0; }
         }
-
+        
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.02); }
             100% { transform: scale(1); }
         }
-        
+
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
 
@@ -309,22 +309,22 @@
             score: 0, clickPower: 1, autoCps: 0,
             upgrades: [
                 { id: 'pointer', name: "Reinforced Pointer", desc: "Strengthen your finger.", baseCost: 10, cps: 0, power: 1, count: 0 },
-                { id: 'business_card', name: "Corner's Business Card", desc: "Bone white. Silian Rail lettering.", baseCost: 15, cps: 0.5, power: 0, count: 0 },
-                { id: 'cursor', name: "Auto-Clicker Cursor", desc: "Clicks on its own. Technology!", baseCost: 100, cps: 2, power: 0, count: 0 },
-                { id: 'double_click', name: "Double-Click Technique", desc: "Two clicks for the price of one.", baseCost: 250, cps: 0, power: 3, count: 0 },
-                { id: 'coffee', name: "Corner's Espresso", desc: "He drinks it black. Increases speed.", baseCost: 500, cps: 8, power: 0, count: 0 },
-                { id: 'gym', name: "Corner's Gym Membership", desc: "Corner spots you. Maximum gains.", baseCost: 1200, cps: 0, power: 10, count: 0 },
-                { id: 'angle', name: "90 Degree Angle", desc: "The perfect corner. Pure geometry.", baseCost: 5000, cps: 25, power: 0, count: 0 },
-                { id: 'titanium_finger', name: "Titanium Finger", desc: "Indestructible clicking power.", baseCost: 8000, cps: 0, power: 25, count: 0 },
-                { id: 'office', name: "The Corner Office", desc: "Management material. Big profits.", baseCost: 20000, cps: 80, power: 0, count: 0 },
-                { id: 'adrenaline', name: "Adrenaline Rush", desc: "Your heart pounds. Everything clicks faster.", baseCost: 50000, cps: 0, power: 50, count: 0 },
-                { id: 'clone', name: "Corner Clone", desc: "Genetic copy. Does half the work.", baseCost: 100000, cps: 200, power: 0, count: 0 },
-                { id: 'lightning', name: "Lightning Reflexes", desc: "Clicks move at the speed of light.", baseCost: 250000, cps: 0, power: 150, count: 0 },
-                { id: 'hexagon', name: "The Hexagon", desc: "Six corners are better than four.", baseCost: 500000, cps: 600, power: 0, count: 0 },
-                { id: 'divine_touch', name: "Divine Touch", desc: "Your clicks are blessed by the gods.", baseCost: 1500000, cps: 0, power: 500, count: 0 },
-                { id: 'shrine', name: "Shrine of Corner", desc: "Worship the angle. Submit to Corner.", baseCost: 3000000, cps: 2500, power: 0, count: 0 },
-                { id: 'antimatter', name: "Antimatter Finger", desc: "Physics has no meaning anymore.", baseCost: 10000000, cps: 0, power: 2000, count: 0 },
-                { id: 'reality', name: "Cornerstone of Reality", desc: "The universe is just a box. We own it.", baseCost: 25000000, cps: 15000, power: 0, count: 0 }
+                { id: 'business_card', name: "Corner's Business Card", desc: "Bone white. Silian Rail lettering.", baseCost: 15, cps: 1, power: 0, count: 0 },
+                { id: 'cursor', name: "Auto-Clicker Cursor", desc: "Clicks on its own. Technology!", baseCost: 100, cps: 8, power: 0, count: 0 },
+                { id: 'double_click', name: "Double-Click Technique", desc: "Two clicks for the price of one.", baseCost: 250, cps: 0, power: 10, count: 0 },
+                { id: 'coffee', name: "Corner's Espresso", desc: "He drinks it black. Increases speed.", baseCost: 500, cps: 40, power: 0, count: 0 },
+                { id: 'gym', name: "Corner's Gym Membership", desc: "Corner spots you. Maximum gains.", baseCost: 1200, cps: 0, power: 60, count: 0 },
+                { id: 'angle', name: "90 Degree Angle", desc: "The perfect corner. Pure geometry.", baseCost: 5000, cps: 400, power: 0, count: 0 },
+                { id: 'titanium_finger', name: "Titanium Finger", desc: "Indestructible clicking power.", baseCost: 8000, cps: 0, power: 500, count: 0 },
+                { id: 'office', name: "The Corner Office", desc: "Management material. Big profits.", baseCost: 20000, cps: 2000, power: 0, count: 0 },
+                { id: 'adrenaline', name: "Adrenaline Rush", desc: "Your heart pounds. Everything clicks faster.", baseCost: 50000, cps: 0, power: 4000, count: 0 },
+                { id: 'clone', name: "Corner Clone", desc: "Genetic copy. Does half the work.", baseCost: 100000, cps: 10000, power: 0, count: 0 },
+                { id: 'lightning', name: "Lightning Reflexes", desc: "Clicks move at the speed of light.", baseCost: 250000, cps: 0, power: 25000, count: 0 },
+                { id: 'hexagon', name: "The Hexagon", desc: "Six corners are better than four.", baseCost: 500000, cps: 55000, power: 0, count: 0 },
+                { id: 'divine_touch', name: "Divine Touch", desc: "Your clicks are blessed by the gods.", baseCost: 1500000, cps: 0, power: 150000, count: 0 },
+                { id: 'shrine', name: "Shrine of Corner", desc: "Worship the angle. Submit to Corner.", baseCost: 3000000, cps: 350000, power: 0, count: 0 },
+                { id: 'antimatter', name: "Antimatter Finger", desc: "Physics has no meaning anymore.", baseCost: 10000000, cps: 0, power: 800000, count: 0 },
+                { id: 'reality', name: "Cornerstone of Reality", desc: "The universe is just a box. We own it.", baseCost: 25000000, cps: 1000000, power: 0, count: 0 } 
             ]
         };
 
