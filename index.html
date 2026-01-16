@@ -573,12 +573,31 @@
             localStorage.clear();
             location.reload();
         }
-
-        function formatNum(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+        
+        function formatNum(n) { 
+            return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
+        }
+        
         function formatCompact(n) {
-            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-            if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
-            return formatNum(Math.floor(n));
+            if (n < 1000) return formatNum(n);
+        
+            const suffixes = [
+                { value: 1e18, symbol: "Qi" }, // Quintillion
+                { value: 1e15, symbol: "Qa" }, // Quadrillion
+                { value: 1e12, symbol: "T" },  // Trillion
+                { value: 1e9,  symbol: "B" },  // Billion
+                { value: 1e6,  symbol: "M" },  // Million
+                { value: 1e3,  symbol: "k" }   // Thousand
+            ];
+        
+            for (let i = 0; i < suffixes.length; i++) {
+                if (n >= suffixes[i].value) {
+                    let num = n / suffixes[i].value;
+                    return (num >= 100 ? Math.floor(num) : num.toFixed(1)).replace(/\.0$/, '') + suffixes[i].symbol;
+                }
+            }
+            
+            return formatNum(n);
         }
 
         init();
