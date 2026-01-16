@@ -14,6 +14,7 @@
             --glass: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-hover: rgba(255, 255, 255, 0.1);
+            --profit-green: #2ecc71;
         }
 
         body {
@@ -25,15 +26,13 @@
             overflow: hidden;
             display: flex;
             flex-direction: row;
-
-            /* PREVENT HIGHLIGHTING */
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
 
-        /* --- CENTER PANEL: THE GAME --- */
+        /* --- CENTER PANEL --- */
         .panel-center {
             flex: 1;
             display: flex;
@@ -47,6 +46,7 @@
             text-align: center;
             margin-bottom: 40px;
             animation: pulse 4s infinite ease-in-out;
+            cursor: default;
         }
 
         #score {
@@ -57,7 +57,6 @@
             -webkit-text-fill-color: transparent;
             display: block;
             text-shadow: 0 10px 30px rgba(112, 161, 255, 0.3);
-            cursor: default;
         }
 
         #cps {
@@ -65,7 +64,6 @@
             color: #a4b0be;
             font-weight: 300;
             letter-spacing: 1px;
-            cursor: default;
         }
 
         .click-area {
@@ -89,7 +87,6 @@
             transition: transform 0.05s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             z-index: 10;
-            -webkit-user-drag: none;
         }
 
         #mainButton:active {
@@ -102,14 +99,6 @@
             height: 100%;
             object-fit: cover;
             display: none;
-            pointer-events: none;
-            -webkit-user-drag: none;
-        }
-
-        #placeholder {
-            text-align: center;
-            color: #777;
-            font-size: 0.9rem;
             pointer-events: none;
         }
 
@@ -124,7 +113,6 @@
             color: white;
             font-weight: 700;
             cursor: pointer;
-            font-family: inherit;
             transition: 0.2s;
             z-index: 100;
         }
@@ -134,7 +122,7 @@
             transform: scale(1.05);
         }
 
-        /* --- RIGHT PANEL: CORNER STORE --- */
+        /* --- RIGHT PANEL --- */
         .panel-right {
             width: 400px;
             background: rgba(0,0,0,0.3);
@@ -154,39 +142,60 @@
             border-bottom: 2px solid var(--glass-border);
             padding-bottom: 15px;
             margin-bottom: 20px;
-            cursor: default;
         }
 
-        .store-list {
-            overflow-y: auto;
-            overflow-x: hidden; /* Prevent scrollbar from the new invisible hit box */
-            flex: 1;
-            padding-right: 8px;
+        /* Bulk Controls */
+        .store-controls {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
         }
+
+        .control-col { display: flex; flex-direction: column; gap: 4px; }
+        .amount-group { display: flex; gap: 5px; }
+
+        .mode-btn, .amt-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: #a4b0be;
+            padding: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 0.7rem;
+            transition: 0.2s;
+            flex: 1;
+        }
+
+        .mode-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .amt-btn.active { background: #eccc68; color: #1e1e2e; border-color: #eccc68; }
+
+        /* Store List & Cards */
+        .store-list { overflow-y: auto; flex: 1; padding-right: 8px; }
 
         .upgrade-card {
             background: var(--glass);
             border: 1px solid var(--glass-border);
             margin-bottom: 12px;
-            padding: 15px;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .card-inner {
             display: grid;
             grid-template-columns: 1fr auto;
             gap: 10px;
-            position: relative; 
-        }
-
-        .upgrade-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: -15px; 
-            width: 15px;  
-            background: transparent;
-            z-index: 1;
+            padding: 15px;
+            transition: transform 0.2s;
+            position: relative;
         }
 
         .upgrade-card::before {
@@ -195,84 +204,55 @@
             left: 0; top: 0; bottom: 0; width: 4px;
             background: var(--primary);
             opacity: 0.5;
-            border-radius: 4px 0 0 4px;
+            z-index: 5;
         }
 
+        .upgrade-card:hover .card-inner { transform: scale(1.01); }
         .upgrade-card:hover {
-            background: var(--glass-hover);
-            transform: translateX(-5px);
-            border-color: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .upgrade-card.disabled {
-            opacity: 0.4;
-            pointer-events: none;
-            filter: grayscale(1);
-        }
-
-        .u-header h3 {
-            margin: 0;
-            font-size: 1rem;
-            color: #dfe4ea;
-        }
-
-        .u-header p {
-            margin: 4px 0 0 0;
-            font-size: 0.75rem;
-            color: #a4b0be;
-            font-style: italic;
-        }
-
-        .u-stats {
-            margin-top: 6px;
-            font-size: 0.75rem;
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        .price-tag {
-            background: rgba(0,0,0,0.4);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            color: #eccc68;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            height: fit-content;
-        }
+        .upgrade-card.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
 
         .count-badge {
             position: absolute;
-            top: 8px;
-            left: 12px;
-            font-size: 0.9rem;
-            font-weight: 800;
+            top: 8px; left: 11px;
+            font-size: 0.8rem; font-weight: 800;
             color: var(--primary);
-            background: rgba(112, 161, 255, 0.1);
-            padding: 2px 8px;
-            border-radius: 4px;
-            z-index: 2;
+            background: rgba(112, 161, 255, 0.15);
+            padding: 2px 8px; border-radius: 6px;
+            z-index: 10;
         }
 
-        .u-content {
-            padding-top: 18px; 
+        .u-content { padding-top: 15px; }
+        .u-header h3 { margin: 0; font-size: 1rem; color: #dfe4ea; }
+        .u-header p { margin: 4px 0 0 0; font-size: 0.75rem; color: #a4b0be; font-style: italic; }
+        .u-stats { margin-top: 6px; font-size: 0.75rem; color: var(--primary); font-weight: 700; }
+
+        .price-tag {
+            background: rgba(0,0,0,0.4);
+            padding: 8px 12px; border-radius: 8px;
+            font-weight: 600; color: #eccc68;
+            font-size: 0.9rem; display: flex;
+            align-items: center; align-self: center;
+            transition: color 0.2s;
         }
 
-        /* --- FX --- */
+        /* Sell Mode Profit Indicator */
+        .mode-sell-active .price-tag { color: var(--profit-green); }
+        .mode-sell-active .upgrade-card::before { background: var(--profit-green); }
+
+        /* FX */
         .floating-text {
-            position: absolute;
-            font-weight: 800;
-            font-size: 1.5rem;
-            pointer-events: none;
-            animation: floatUp 0.8s forwards;
-            color: white;
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+            position: absolute; font-weight: 800; font-size: 1.5rem;
+            pointer-events: none; animation: floatUp 0.8s forwards;
+            color: white; text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
             z-index: 20;
-            white-space: nowrap;
         }
-
-        @keyframes floatUp {
+        
+         @keyframes floatUp {
             0% { transform: translateY(0) scale(0.5); opacity: 1; }
             50% { transform: translateY(-40px) scale(1.2); opacity: 1; }
             100% { transform: translateY(-100px) scale(1); opacity: 0; }
@@ -283,10 +263,8 @@
             50% { transform: scale(1.02); }
             100% { transform: scale(1); }
         }
-
-        /* Scrollbar styling */
+        
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
 
     </style>
@@ -300,7 +278,6 @@
             <span id="score">0</span>
             <div id="cps">0 / sec</div>
         </div>
-
         <div class="click-area">
             <div id="mainButton">
                 <img id="userImage" draggable="false">
@@ -310,178 +287,51 @@
     </div>
 
     <div class="panel-right">
-        <div class="panel-title">
-            The Corner Store
+        <div class="panel-title">The Corner Store</div>
+        
+        <div class="store-controls">
+            <div class="control-col">
+                <button id="mode-buy" class="mode-btn active" onclick="setMode('buy')">BUY</button>
+                <button id="mode-sell" class="mode-btn" onclick="setMode('sell')">SELL</button>
+            </div>
+            <div class="amount-group">
+                <button id="amt-1" class="amt-btn active" onclick="setAmount(1)">1</button>
+                <button id="amt-10" class="amt-btn" onclick="setAmount(10)">10</button>
+                <button id="amt-100" class="amt-btn" onclick="setAmount(100)">100</button>
+            </div>
         </div>
-        <div class="store-list" id="storeList">
-        </div>
+
+        <div class="store-list" id="storeList"></div>
     </div>
 
     <script>
-        // --- Game Configuration & Data ---
         const defaultGame = {
-            score: 0,
-            clickPower: 1,
-            autoCps: 0,
+            score: 0, clickPower: 1, autoCps: 0,
             upgrades: [
-                {
-                    id: 'pointer',
-                    name: "Reinforced Pointer",
-                    desc: "Strengthen your finger.",
-                    baseCost: 10,
-                    cps: 0,
-                    power: 1,                    count: 0
-                },
-                {
-                    id: 'business_card',
-                    name: "Corner's Business Card",
-                    desc: "Bone white. Silian Rail lettering.",
-                    baseCost: 15,
-                    cps: 0.5,
-                    power: 0,
-                    count: 0
-                },
-                {
-                    id: 'cursor',
-                    name: "Auto-Clicker Cursor",
-                    desc: "Clicks on its own. Technology!",
-                    baseCost: 100,
-                    cps: 2,
-                    power: 0,
-                    count: 0
-                },
-                {
-                    id: 'double_click',
-                    name: "Double-Click Technique",
-                    desc: "Two clicks for the price of one.",
-                    baseCost: 250,
-                    cps: 0,
-                    power: 3,
-                    count: 0
-                },
-                {
-                    id: 'coffee',
-                    name: "Corner's Espresso",
-                    desc: "He drinks it black. Increases speed.",
-                    baseCost: 500,
-                    cps: 8,
-                    power: 0,
-                    count: 0
-                },
-                {
-                    id: 'gym',
-                    name: "Corner's Gym Membership",
-                    desc: "Corner spots you. Maximum gains.",
-                    baseCost: 1200,
-                    cps: 0,
-                    power: 10,
-                    count: 0
-                },
-                {
-                    id: 'angle',
-                    name: "90 Degree Angle",
-                    desc: "The perfect corner. Pure geometry.",
-                    baseCost: 5000,
-                    cps: 25,
-                    power: 0,
-                    count: 0
-                },
-                {
-                    id: 'titanium_finger',
-                    name: "Titanium Finger",
-                    desc: "Indestructible clicking power.",
-                    baseCost: 8000,
-                    cps: 0,
-                    power: 25,
-                    count: 0
-                },
-                {
-                    id: 'office',
-                    name: "The Corner Office",
-                    desc: "Management material. Big profits.",
-                    baseCost: 20000,
-                    cps: 80,
-                    power: 0,
-                    count: 0
-                },
-                {
-                    id: 'adrenaline',
-                    name: "Adrenaline Rush",
-                    desc: "Your heart pounds. Everything clicks faster.",
-                    baseCost: 50000,
-                    cps: 0,
-                    power: 50,
-                    count: 0
-                },
-                {
-                    id: 'clone',
-                    name: "Corner Clone",
-                    desc: "Genetic copy. Does half the work.",
-                    baseCost: 100000,
-                    cps: 200,
-                    power: 0,
-                    count: 0
-                },
-                {
-                    id: 'lightning',
-                    name: "Lightning Reflexes",
-                    desc: "Clicks move at the speed of light.",
-                    baseCost: 250000,
-                    cps: 0,
-                    power: 150,
-                    count: 0
-                },
-                {
-                    id: 'hexagon',
-                    name: "The Hexagon",
-                    desc: "Six corners are better than four.",
-                    baseCost: 500000,
-                    cps: 600,
-                    power: 0,
-                    count: 0
-                },
-                {
-                    id: 'divine_touch',
-                    name: "Divine Touch",
-                    desc: "Your clicks are blessed by the gods.",
-                    baseCost: 1500000,
-                    cps: 0,
-                    power: 500,
-                    count: 0
-                },
-                {
-                    id: 'shrine',
-                    name: "Shrine of Corner",
-                    desc: "Worship the angle. Submit to Corner.",
-                    baseCost: 3000000,
-                    cps: 2500,
-                    power: 0,
-                    count: 0
-                },
-                {
-                    id: 'antimatter',
-                    name: "Antimatter Finger",
-                    desc: "Physics has no meaning anymore.",
-                    baseCost: 10000000,
-                    cps: 0,
-                    power: 2000,
-                    count: 0
-                },
-                {
-                    id: 'reality',
-                    name: "Cornerstone of Reality",
-                    desc: "The universe is just a box. We own it.",
-                    baseCost: 25000000,
-                    cps: 15000,
-                    power: 0,
-                    count: 0
-                }
+                { id: 'pointer', name: "Reinforced Pointer", desc: "Strengthen your finger.", baseCost: 10, cps: 0, power: 1, count: 0 },
+                { id: 'business_card', name: "Corner's Business Card", desc: "Bone white. Silian Rail lettering.", baseCost: 15, cps: 0.5, power: 0, count: 0 },
+                { id: 'cursor', name: "Auto-Clicker Cursor", desc: "Clicks on its own. Technology!", baseCost: 100, cps: 2, power: 0, count: 0 },
+                { id: 'double_click', name: "Double-Click Technique", desc: "Two clicks for the price of one.", baseCost: 250, cps: 0, power: 3, count: 0 },
+                { id: 'coffee', name: "Corner's Espresso", desc: "He drinks it black. Increases speed.", baseCost: 500, cps: 8, power: 0, count: 0 },
+                { id: 'gym', name: "Corner's Gym Membership", desc: "Corner spots you. Maximum gains.", baseCost: 1200, cps: 0, power: 10, count: 0 },
+                { id: 'angle', name: "90 Degree Angle", desc: "The perfect corner. Pure geometry.", baseCost: 5000, cps: 25, power: 0, count: 0 },
+                { id: 'titanium_finger', name: "Titanium Finger", desc: "Indestructible clicking power.", baseCost: 8000, cps: 0, power: 25, count: 0 },
+                { id: 'office', name: "The Corner Office", desc: "Management material. Big profits.", baseCost: 20000, cps: 80, power: 0, count: 0 },
+                { id: 'adrenaline', name: "Adrenaline Rush", desc: "Your heart pounds. Everything clicks faster.", baseCost: 50000, cps: 0, power: 50, count: 0 },
+                { id: 'clone', name: "Corner Clone", desc: "Genetic copy. Does half the work.", baseCost: 100000, cps: 200, power: 0, count: 0 },
+                { id: 'lightning', name: "Lightning Reflexes", desc: "Clicks move at the speed of light.", baseCost: 250000, cps: 0, power: 150, count: 0 },
+                { id: 'hexagon', name: "The Hexagon", desc: "Six corners are better than four.", baseCost: 500000, cps: 600, power: 0, count: 0 },
+                { id: 'divine_touch', name: "Divine Touch", desc: "Your clicks are blessed by the gods.", baseCost: 1500000, cps: 0, power: 500, count: 0 },
+                { id: 'shrine', name: "Shrine of Corner", desc: "Worship the angle. Submit to Corner.", baseCost: 3000000, cps: 2500, power: 0, count: 0 },
+                { id: 'antimatter', name: "Antimatter Finger", desc: "Physics has no meaning anymore.", baseCost: 10000000, cps: 0, power: 2000, count: 0 },
+                { id: 'reality', name: "Cornerstone of Reality", desc: "The universe is just a box. We own it.", baseCost: 25000000, cps: 15000, power: 0, count: 0 }
             ]
         };
 
         let Game = JSON.parse(JSON.stringify(defaultGame));
+        let buyMode = 'buy';
+        let buyAmount = 1;
 
-        // --- DOM Elements ---
         const els = {
             score: document.getElementById('score'),
             cps: document.getElementById('cps'),
@@ -491,156 +341,149 @@
             store: document.getElementById('storeList')
         };
         
-        // Fixed configuration
         const FIXED_IMAGE = 'https://i.imgur.com/MAVFzZn.png';
         const SCREAM_WORD = 'CORNER!';
 
-        // --- Initialization ---
         function init() {
             loadGame();
-            
-            // Load fixed image
             els.img.src = FIXED_IMAGE;
             els.img.style.display = 'block';
             els.placeholder.style.display = 'none';
-
             renderStore();
             updateUI();
             requestAnimationFrame(gameLoop);
-            
-            // Auto-save interval
             setInterval(saveGame, 5000);
         }
 
-        // --- Store System ---
+        function setMode(mode) {
+            buyMode = mode;
+            document.getElementById('mode-buy').classList.toggle('active', mode === 'buy');
+            document.getElementById('mode-sell').classList.toggle('active', mode === 'sell');
+            els.store.classList.toggle('mode-sell-active', mode === 'sell');
+            renderStore();
+        }
+
+        function setAmount(amt) {
+            buyAmount = amt;
+            [1, 10, 100].forEach(a => document.getElementById(`amt-${a}`).classList.toggle('active', a === amt));
+            renderStore();
+        }
+
+        function getBulkCost(u, count, amount) {
+            let total = 0;
+            if (buyMode === 'buy') {
+                for (let i = 0; i < amount; i++) {
+                    total += Math.floor(u.baseCost * Math.pow(1.15, count + i));
+                }
+            } else {
+                for (let i = 0; i < amount; i++) {
+                    if (count - i <= 0) break;
+                    total += Math.floor(u.baseCost * Math.pow(1.15, count - 1 - i)) * 0.7;
+                }
+            }
+            return Math.floor(total);
+        }
+
         function renderStore() {
-            els.store.innerHTML = '';
+            if (els.store.children.length === 0) {
+                Game.upgrades.forEach((u, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'upgrade-card';
+                    card.id = `upgrade-${index}`;
+                    card.onclick = () => buyUpgrade(index);
+                    card.innerHTML = `
+                        <div class="card-inner">
+                            <div class="count-badge" id="count-${index}">0</div>
+                            <div class="u-content">
+                                <div class="u-header"><h3>${u.name}</h3><p>${u.desc}</p></div>
+                                <div class="u-stats" id="stats-${index}"></div>
+                            </div>
+                            <div class="price-tag" id="price-${index}">0</div>
+                        </div>`;
+                    els.store.appendChild(card);
+                });
+            }
+
             Game.upgrades.forEach((u, index) => {
-                const cost = Math.floor(u.baseCost * Math.pow(1.15, u.count));
+                const cost = getBulkCost(u, u.count, buyAmount);
+                const card = document.getElementById(`upgrade-${index}`);
                 
-                const card = document.createElement('div');
-                card.className = 'upgrade-card';
-                if(Game.score < cost) card.classList.add('disabled');
+                // FIXED LOGIC: Only disable for score when BUYING. Disable for count when SELLING.
+                if (buyMode === 'buy') {
+                    card.classList.toggle('disabled', Game.score < cost);
+                } else {
+                    card.classList.toggle('disabled', u.count < buyAmount);
+                }
+
+                document.getElementById(`price-${index}`).innerText = formatCompact(cost);
+                document.getElementById(`count-${index}`).innerText = u.count;
                 
-                // Stat text
-                let statText = "";
-                if(u.cps > 0 && u.power > 0) statText = `+${formatNum(u.cps)} / sec | +${formatNum(u.power)} Click`;
-                else if(u.cps > 0) statText = `+${formatNum(u.cps)} / sec`;
-                else if(u.power > 0) statText = `+${formatNum(u.power)} Click Power`;
-
-                card.innerHTML = `
-                    <div class="count-badge">${u.count}</div>
-                    <div class="u-content">
-                        <div class="u-header">
-                            <h3>${u.name}</h3>
-                            <p>${u.desc}</p>
-                        </div>
-                        <div class="u-stats">${statText}</div>
-                    </div>
-                    <div class="price-tag">${formatCompact(cost)}</div>
-                `;
-
-                card.onclick = () => buyUpgrade(index);
-                els.store.appendChild(card);
+                let statText = u.cps > 0 && u.power > 0 ? `+${formatNum(u.cps)}/s | +${formatNum(u.power)} Click` :
+                               u.cps > 0 ? `+${formatNum(u.cps)} / sec` : `+${formatNum(u.power)} Click Power`;
+                document.getElementById(`stats-${index}`).innerText = statText;
             });
         }
 
         function buyUpgrade(index) {
             const u = Game.upgrades[index];
-            const cost = Math.floor(u.baseCost * Math.pow(1.15, u.count));
+            const cost = getBulkCost(u, u.count, buyAmount);
 
-            if(Game.score >= cost) {
+            if (buyMode === 'buy' && Game.score >= cost) {
                 Game.score -= cost;
-                u.count++;
-                
-                // Recalculate totals from scratch to avoid drift errors
-                recalcStats();
-                
-                renderStore();
-                updateUI();
-                saveGame(); // Instant save on purchase
-            }
+                u.count += buyAmount;
+            } else if (buyMode === 'sell' && u.count >= buyAmount) {
+                Game.score += cost;
+                u.count -= buyAmount;
+            } else { return; }
+
+            recalcStats();
+            renderStore();
+            updateUI();
+            saveGame();
         }
 
         function recalcStats() {
-            let newCps = 0;
-            let newClick = 1;
-
-            Game.upgrades.forEach(u => {
-                newCps += (u.cps * u.count);
-                newClick += (u.power * u.count);
-            });
-
-            Game.autoCps = newCps;
-            Game.clickPower = newClick;
+            let nC = 0, nP = 1;
+            Game.upgrades.forEach(u => { nC += (u.cps * u.count); nP += (u.power * u.count); });
+            Game.autoCps = nC; Game.clickPower = nP;
         }
 
-        // --- Scream Function ---
         function scream() {
-            // Chaotic voice variation
-            const utterance = new SpeechSynthesisUtterance(SCREAM_WORD);
-            utterance.volume = 1;
-            utterance.rate = 1 + (Math.random() * 0.5); // 1.0 to 1.5 speed
-            utterance.pitch = 0.8 + (Math.random() * 0.8); // 0.8 to 1.6 pitch
-            
-            // If they have the "Cornerstone" upgrade, make it sound robotic/weird
-            if(Game.upgrades[16] && Game.upgrades[16].count > 0) {
-                 utterance.pitch = 0.1;
-                 utterance.rate = 0.8;
-            }
-
-            window.speechSynthesis.speak(utterance);
+            const ut = new SpeechSynthesisUtterance(SCREAM_WORD);
+            ut.rate = 1 + (Math.random() * 0.5);
+            ut.pitch = (Game.upgrades[16].count > 0) ? 0.1 : 0.8 + (Math.random() * 0.8);
+            window.speechSynthesis.speak(ut);
         }
 
-        // --- Main Interaction ---
         els.btn.addEventListener('mousedown', (e) => {
-            // Cancel any current speech to allow rapid fire
             window.speechSynthesis.cancel();
-            
             Game.score += Game.clickPower;
             spawnFloatingText(e.clientX, e.clientY, `+${formatCompact(Game.clickPower)}`);
             scream();
             updateUI();
-            
             renderStore(); 
         });
 
-        // --- FX ---
         function spawnFloatingText(x, y, txt) {
             const el = document.createElement('div');
             el.className = 'floating-text';
             el.innerText = txt;
-            
-            const offsetX = (Math.random() - 0.5) * 50;
-            const offsetY = (Math.random() - 0.5) * 20;
-            
-            el.style.left = (x + offsetX) + 'px';
-            el.style.top = (y + offsetY - 40) + 'px';
-            
-            // Random distinct colors
-            const hues = [0, 60, 120, 180, 280, 320]; 
-            const hue = hues[Math.floor(Math.random() * hues.length)];
-            el.style.color = `hsl(${hue}, 100%, 70%)`;
-
+            el.style.left = (x + (Math.random() - 0.5) * 50) + 'px';
+            el.style.top = (y - 40) + 'px';
+            el.style.color = `hsl(${[0, 60, 120, 180, 280, 320][Math.floor(Math.random() * 6)]}, 100%, 70%)`;
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 800);
         }
 
-        // --- Loop & Logic ---
         let lastTime = performance.now();
-
         function gameLoop(currentTime) {
-            const deltaTime = (currentTime - lastTime) / 1000; // seconds
+            const deltaTime = (currentTime - lastTime) / 1000;
             lastTime = currentTime;
-
             if(Game.autoCps > 0) {
                 Game.score += (Game.autoCps * deltaTime);
                 updateUI();
-                
-                // Throttle store updates to save performance
-                if(Math.random() < 0.1) renderStore(); 
+                renderStore(); 
             }
-            
             requestAnimationFrame(gameLoop);
         }
 
@@ -649,47 +492,30 @@
             els.cps.innerText = `${formatCompact(Game.autoCps)} / sec`;
         }
 
-        // --- Save System ---
-        function saveGame() {
-            localStorage.setItem('cornerClickerSave', JSON.stringify(Game));
-        }
+        function saveGame() { localStorage.setItem('cornerClickerSave', JSON.stringify(Game)); }
 
         function loadGame() {
             const saved = localStorage.getItem('cornerClickerSave');
             if(saved) {
                 const parsed = JSON.parse(saved);
-                // Merge saved data with default structure to prevent errors if we add new upgrades later
                 Game = { ...defaultGame, ...parsed };
-                // Ensure upgrades array is merged correctly
-                if(parsed.upgrades) {
-                     Game.upgrades = defaultGame.upgrades.map((u, i) => {
-                         return parsed.upgrades[i] || u;
-                     });
-                }
+                Game.upgrades = defaultGame.upgrades.map((u, i) => parsed.upgrades[i] || u);
                 recalcStats();
             }
         }
 
         function resetGame() {
-            if(confirm("Are you sure you want to wipe your save?")) {
-                localStorage.removeItem('cornerClickerSave');
-                location.reload();
-            }
+            if(confirm("Wipe save?")) { localStorage.removeItem('cornerClickerSave'); location.reload(); }
         }
 
-        // --- Formatting ---
-        function formatNum(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        function formatCompact(num) {
-            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
-            return formatNum(Math.floor(num));
+        function formatNum(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+        function formatCompact(n) {
+            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+            if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+            return formatNum(Math.floor(n));
         }
 
         init();
-
     </script>
 </body>
 </html>
