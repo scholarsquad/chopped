@@ -543,8 +543,18 @@
             const saved = localStorage.getItem('cornerClickerSave');
             if(saved) {
                 const parsed = JSON.parse(saved);
-                Game = { ...defaultGame, ...parsed };
-                Game.upgrades = defaultGame.upgrades.map((u, i) => parsed.upgrades[i] || u);
+                
+                // 1. Restore core stats
+                Game.score = parsed.score || 0;
+                
+                // 2. Only restore the COUNT, not the whole upgrade object
+                Game.upgrades.forEach((u, i) => {
+                    const savedUpgrade = parsed.upgrades.find(pu => pu.id === u.id);
+                    if (savedUpgrade) {
+                        u.count = savedUpgrade.count;
+                    }
+                });
+                
                 recalcStats();
             }
         }
