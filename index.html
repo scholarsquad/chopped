@@ -26,11 +26,11 @@
             display: flex;
             flex-direction: row;
 
-            /* --- FIX: PREVENT HIGHLIGHTING --- */
-            -webkit-user-select: none; /* Safari */
-            -moz-user-select: none;    /* Firefox */
-            -ms-user-select: none;     /* IE10+/Edge */
-            user-select: none;         /* Standard */
+            /* PREVENT HIGHLIGHTING */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         /* --- CENTER PANEL: THE GAME --- */
@@ -89,7 +89,6 @@
             transition: transform 0.05s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             z-index: 10;
-            /* Extra safety for the button specifically */
             -webkit-user-drag: none;
         }
 
@@ -160,6 +159,7 @@
 
         .store-list {
             overflow-y: auto;
+            overflow-x: hidden; /* Prevent scrollbar from the new invisible hit box */
             flex: 1;
             padding-right: 8px;
         }
@@ -175,8 +175,18 @@
             display: grid;
             grid-template-columns: 1fr auto;
             gap: 10px;
-            position: relative;
-            overflow: hidden;
+            position: relative; 
+        }
+
+        .upgrade-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: -15px; 
+            width: 15px;  
+            background: transparent;
+            z-index: 1;
         }
 
         .upgrade-card::before {
@@ -185,6 +195,7 @@
             left: 0; top: 0; bottom: 0; width: 4px;
             background: var(--primary);
             opacity: 0.5;
+            border-radius: 4px 0 0 4px;
         }
 
         .upgrade-card:hover {
@@ -313,8 +324,7 @@
                     desc: "Strengthen your finger.",
                     baseCost: 10,
                     cps: 0,
-                    power: 1,
-                    count: 0
+                    power: 1,                    count: 0
                 },
                 {
                     id: 'business_card',
