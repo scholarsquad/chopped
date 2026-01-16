@@ -15,6 +15,7 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-hover: rgba(255, 255, 255, 0.1);
             --profit-green: #2ecc71;
+            --cheat-neon: #00ff41;
         }
 
         body {
@@ -27,8 +28,6 @@
             display: flex;
             flex-direction: row;
             -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             user-select: none;
         }
 
@@ -144,7 +143,7 @@
             margin-bottom: 20px;
         }
 
-        /* Bulk Controls */
+        /* Store Controls */
         .store-controls {
             display: grid;
             grid-template-columns: 1fr 3fr;
@@ -242,14 +241,9 @@
 
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
             z-index: 1000;
             animation: fadeIn 0.3s ease-out; 
         }
@@ -265,6 +259,43 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
+
+        /* Cheat Modal Styling */
+        .cheat-modal-box {
+            background: #0a0a0a;
+            padding: 30px;
+            border: 3px solid var(--cheat-neon);
+            border-radius: 12px;
+            text-align: center;
+            min-width: 400px;
+            color: var(--cheat-neon);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+            font-family: 'monospace';
+        }
+
+        .cheat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .cheat-btn {
+            background: #111;
+            color: var(--cheat-neon);
+            border: 1px solid var(--cheat-neon);
+            padding: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+
+        .cheat-btn:hover {
+            background: var(--cheat-neon);
+            color: black;
+        }
         
         .modal-buttons {
             margin-top: 20px;
@@ -275,7 +306,6 @@
         
         .confirm-btn { background: #ff4444; color: white; padding: 10px 20px; border: none; cursor: pointer; font-weight: bold; }
         .cancel-btn { background: #555; color: white; padding: 10px 20px; border: none; cursor: pointer; }
-        
         .confirm-btn:hover { background: #cc0000; }
 
         .mode-sell-active .price-tag { color: var(--profit-green); }
@@ -291,7 +321,7 @@
 
         @keyframes floatUp {
             0% { transform: translateY(0) scale(0.5); opacity: 1; }
-            50% { transform: translateY(-40px) scale(1.2); opacity: 1; } /* The "pop" effect */
+            50% { transform: translateY(-40px) scale(1.2); opacity: 1; }
             100% { transform: translateY(-100px) scale(1); opacity: 0; }
         }
         
@@ -301,12 +331,7 @@
             100% { transform: scale(1); }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        /* Animation for the box itself */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -319,7 +344,7 @@
 </head>
 <body>
 
-    <button class="reset-btn" onclick="showResetConfirmation()">Reset Game</button>
+    <button id="reset-main-btn" class="reset-btn" onclick="handleResetClick()">Reset Game</button>
 
     <div class="panel-center">
         <div class="stats-container">
@@ -352,6 +377,33 @@
         <div class="store-list" id="storeList"></div>
     </div>
 
+    <div id="reset-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <h2>ARE YOU SURE?</h2>
+            <p>All your progress, corners, and upgrades will be lost forever!</p>
+            <div class="modal-buttons">
+                <button onclick="confirmReset()" class="confirm-btn">Yes, restart</button>
+                <button onclick="closeModal()" class="cancel-btn">No, keep progress</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cheat-modal" class="modal-overlay" style="display: none;">
+        <div class="cheat-modal-box">
+            <h2>&gt; ADMIN_CONSOLE_ACCESS_GRANTED</h2>
+            <p style="font-size: 0.7rem; opacity: 0.7;">Bypassing security protocols... Done.</p>
+            <div class="cheat-grid">
+                <button class="cheat-btn" onclick="cheatScore(1000000)">+1 Million</button>
+                <button class="cheat-btn" onclick="cheatScore(1000000000000)">+1 Trillion</button>
+                <button class="cheat-btn" onclick="cheatUpgrades(10)">+10 All Items</button>
+                <button class="cheat-btn" onclick="cheatUpgrades(100)">+100 All Items</button>
+            </div>
+            <div style="margin-top: 25px;">
+                <button onclick="closeCheatModal()" class="cancel-btn">Exit Terminal</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const defaultGame = {
             score: 0, clickPower: 1, autoCps: 0,
@@ -380,6 +432,10 @@
         let buyMode = 'buy';
         let buyAmount = 1;
 
+        // --- SECRET SEQUENCE VARIABLES ---
+        let secretSteps = 0;
+        let secretTimer = null;
+
         const els = {
             score: document.getElementById('score'),
             cps: document.getElementById('cps'),
@@ -401,8 +457,85 @@
             updateUI();
             requestAnimationFrame(gameLoop);
             setInterval(saveGame, 5000);
+            
+            // Listen for corner clicks
+            document.addEventListener('mousedown', handleCornerClicks);
         }
 
+        // --- FORMATTING LOGIC (Fixed) ---
+        function formatNum(n) { 
+            if (isNaN(n)) return "0";
+            return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
+        }
+
+        function formatCompact(n) {
+            if (n === Infinity) return "Infinite";
+            if (isNaN(n) || n < 0) return "0";
+            if (n < 1000) return formatNum(n);
+
+            const suffixes = [
+                { value: 1e18, symbol: "Qi" },
+                { value: 1e15, symbol: "Qa" },
+                { value: 1e12, symbol: "T" },
+                { value: 1e9,  symbol: "B" },
+                { value: 1e6,  symbol: "M" },
+                { value: 1e3,  symbol: "k" }
+            ];
+
+            for (let i = 0; i < suffixes.length; i++) {
+                if (n >= suffixes[i].value) {
+                    let num = n / suffixes[i].value;
+                    let formatted = num >= 100 ? Math.floor(num) : num.toFixed(1);
+                    return formatted.toString().replace(/\.0$/, '') + suffixes[i].symbol;
+                }
+            }
+            return formatNum(n);
+        }
+
+        // --- SECRET SEQUENCE LOGIC ---
+        function handleCornerClicks(e) {
+            const x = e.clientX;
+            const y = e.clientY;
+            const width = window.innerWidth;
+
+            if (secretSteps === 0 && x < 60 && y < 60) {
+                secretSteps = 1;
+                clearTimeout(secretTimer);
+                secretTimer = setTimeout(() => secretSteps = 0, 5000);
+            } 
+            else if (secretSteps === 1 && x > width - 60 && y < 60) {
+                secretSteps = 2;
+            }
+        }
+
+        function handleResetClick() {
+            if (secretSteps === 2) {
+                openCheatModal();
+                secretSteps = 0;
+                clearTimeout(secretTimer);
+            } else {
+                showResetConfirmation();
+            }
+        }
+
+        // --- CHEAT FUNCTIONS ---
+        function openCheatModal() { document.getElementById('cheat-modal').style.display = 'flex'; }
+        function closeCheatModal() { document.getElementById('cheat-modal').style.display = 'none'; }
+        
+        function cheatScore(amt) {
+            Game.score += amt;
+            updateUI();
+            renderStore();
+        }
+
+        function cheatUpgrades(amt) {
+            Game.upgrades.forEach(u => u.count += amt);
+            recalcStats();
+            updateUI();
+            renderStore();
+        }
+
+        // --- CORE GAME LOGIC ---
         function setMode(mode) {
             buyMode = mode;
             document.getElementById('mode-buy').classList.toggle('active', mode === 'buy');
@@ -456,7 +589,6 @@
                 const cost = getBulkCost(u, u.count, buyAmount);
                 const card = document.getElementById(`upgrade-${index}`);
                 
-                // FIXED LOGIC: Only disable for score when BUYING. Disable for count when SELLING.
                 if (buyMode === 'buy') {
                     card.classList.toggle('disabled', Game.score < cost);
                 } else {
@@ -466,8 +598,8 @@
                 document.getElementById(`price-${index}`).innerText = formatCompact(cost);
                 document.getElementById(`count-${index}`).innerText = u.count;
                 
-                let statText = u.cps > 0 && u.power > 0 ? `+${formatNum(u.cps)}/s | +${formatNum(u.power)} Click` :
-                               u.cps > 0 ? `+${formatNum(u.cps)} / sec` : `+${formatNum(u.power)} Click Power`;
+                let statText = u.cps > 0 && u.power > 0 ? `+${formatCompact(u.cps)}/s | +${formatCompact(u.power)} Click` :
+                               u.cps > 0 ? `+${formatCompact(u.cps)} / sec` : `+${formatCompact(u.power)} Click Power`;
                 document.getElementById(`stats-${index}`).innerText = statText;
             });
         }
@@ -536,6 +668,7 @@
         }
 
         function updateUI() {
+            if (!els.score) return;
             els.score.innerText = formatNum(Math.floor(Game.score));
             els.cps.innerText = `${formatCompact(Game.autoCps)} / sec`;
         }
@@ -547,25 +680,23 @@
             if(saved) {
                 const parsed = JSON.parse(saved);
                 Game = { ...defaultGame, ...parsed };
-                Game.upgrades = defaultGame.upgrades.map((u, i) => parsed.upgrades[i] || u);
+                Game.upgrades = defaultGame.upgrades.map((u, i) => {
+                    const savedUpgrade = parsed.upgrades.find(pu => pu.id === u.id);
+                    return savedUpgrade ? { ...u, count: savedUpgrade.count } : u;
+                });
                 recalcStats();
             }
         }
         
-        function showResetConfirmation() {
-            const modal = document.getElementById('reset-modal');
-            modal.style.display = 'flex';
-        }
+        function showResetConfirmation() { document.getElementById('reset-modal').style.display = 'flex'; }
         
         function closeModal() {
             const modal = document.getElementById('reset-modal');
-            // Add a simple fade out effect before hiding
             modal.style.opacity = '0';
             modal.style.transition = 'opacity 0.2s ease';
-            
             setTimeout(() => {
                 modal.style.display = 'none';
-                modal.style.opacity = '1'; // Reset opacity for the next time it opens
+                modal.style.opacity = '1';
             }, 200);
         }
         
@@ -574,24 +705,7 @@
             location.reload();
         }
 
-        function formatNum(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
-        function formatCompact(n) {
-            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-            if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
-            return formatNum(Math.floor(n));
-        }
-
         init();
     </script>
-    <div id="reset-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-box">
-        <h2>ARE YOU SURE?</h2>
-        <p>All your progress, corners, and upgrades will be lost forever!</p>
-        <div class="modal-buttons">
-            <button onclick="confirmReset()" class="confirm-btn">Yes, restart</button>
-            <button onclick="closeModal()" class="cancel-btn">No, keep progress</button>
-        </div>
-    </div>
-</div>
 </body>
 </html>
