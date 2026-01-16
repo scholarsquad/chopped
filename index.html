@@ -253,7 +253,7 @@
             z-index: 1000;
             animation: fadeIn 0.3s ease-out;
         }
-        
+
         .modal-box {
             background: #1a1a1a;
             padding: 30px;
@@ -289,7 +289,7 @@
             color: white; text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
             z-index: 20;
         }
-        
+
          @keyframes floatUp {
             0% { transform: translateY(0) scale(0.5); opacity: 1; }
             50% { transform: translateY(-40px) scale(1.2); opacity: 1; }
@@ -306,12 +306,12 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        
+
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-        
+
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
 
@@ -336,7 +336,7 @@
 
     <div class="panel-right">
         <div class="panel-title">The Corner Store</div>
-        
+
         <div class="store-controls">
             <div class="control-col">
                 <button id="mode-buy" class="mode-btn active" onclick="setMode('buy')">BUY</button>
@@ -388,7 +388,7 @@
             placeholder: document.getElementById('placeholder'),
             store: document.getElementById('storeList')
         };
-        
+
         const FIXED_IMAGE = 'https://i.imgur.com/MAVFzZn.png';
         const SCREAM_WORD = 'CORNER!';
 
@@ -455,7 +455,7 @@
             Game.upgrades.forEach((u, index) => {
                 const cost = getBulkCost(u, u.count, buyAmount);
                 const card = document.getElementById(`upgrade-${index}`);
-                
+
                 // FIXED LOGIC: Only disable for score when BUYING. Disable for count when SELLING.
                 if (buyMode === 'buy') {
                     card.classList.toggle('disabled', Game.score < cost);
@@ -465,7 +465,7 @@
 
                 document.getElementById(`price-${index}`).innerText = formatCompact(cost);
                 document.getElementById(`count-${index}`).innerText = u.count;
-                
+
                 let statText = u.cps > 0 && u.power > 0 ? `+${formatNum(u.cps)}/s | +${formatNum(u.power)} Click` :
                                u.cps > 0 ? `+${formatNum(u.cps)} / sec` : `+${formatNum(u.power)} Click Power`;
                 document.getElementById(`stats-${index}`).innerText = statText;
@@ -556,48 +556,29 @@
             const modal = document.getElementById('reset-modal');
             modal.style.display = 'flex';
         }
-        
+
         function closeModal() {
             const modal = document.getElementById('reset-modal');
             // Add a simple fade out effect before hiding
             modal.style.opacity = '0';
             modal.style.transition = 'opacity 0.2s ease';
-            
+
             setTimeout(() => {
                 modal.style.display = 'none';
                 modal.style.opacity = '1'; // Reset opacity for the next time it opens
             }, 200);
         }
-        
+
         function confirmReset() {
             localStorage.clear();
             location.reload();
         }
-        
-        function formatNum(n) { 
-            return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
-        }
-        
+
+        function formatNum(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
         function formatCompact(n) {
-            if (n < 1000) return formatNum(n);
-        
-            const suffixes = [
-                { value: 1e18, symbol: "Qi" }, // Quintillion
-                { value: 1e15, symbol: "Qa" }, // Quadrillion
-                { value: 1e12, symbol: "T" },  // Trillion
-                { value: 1e9,  symbol: "B" },  // Billion
-                { value: 1e6,  symbol: "M" },  // Million
-                { value: 1e3,  symbol: "k" }   // Thousand
-            ];
-        
-            for (let i = 0; i < suffixes.length; i++) {
-                if (n >= suffixes[i].value) {
-                    let num = n / suffixes[i].value;
-                    return (num >= 100 ? Math.floor(num) : num.toFixed(1)).replace(/\.0$/, '') + suffixes[i].symbol;
-                }
-            }
-            
-            return formatNum(n);
+            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+            if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+            return formatNum(Math.floor(n));
         }
 
         init();
