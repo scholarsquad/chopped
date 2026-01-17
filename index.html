@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,7 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-hover: rgba(255, 255, 255, 0.1);
             --profit-green: #2ecc71;
+            --cheat-neon: #00ff41;
         }
 
         body {
@@ -27,8 +29,6 @@
             display: flex;
             flex-direction: row;
             -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             user-select: none;
         }
 
@@ -54,6 +54,7 @@
             font-weight: 800;
             background: -webkit-linear-gradient(#fff, #70a1ff);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             display: block;
             text-shadow: 0 10px 30px rgba(112, 161, 255, 0.3);
@@ -80,8 +81,8 @@
             height: 260px;
             border-radius: 50%;
             background: #2f3542;
-            border: 6px solid rgba(255,255,255,0.05);
-            box-shadow: 0 0 60px rgba(112, 161, 255, 0.1), inset 0 0 20px rgba(0,0,0,0.5);
+            border: 6px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 60px rgba(112, 161, 255, 0.1), inset 0 0 20px rgba(0, 0, 0, 0.5);
             cursor: pointer;
             overflow: hidden;
             transition: transform 0.05s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -102,10 +103,17 @@
             pointer-events: none;
         }
 
-        .reset-btn {
+        .top-left-controls {
             position: absolute;
             top: 20px;
             left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .reset-btn {
             padding: 12px 20px;
             background: #ff4757;
             border: none;
@@ -114,7 +122,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
-            z-index: 100;
+            width: 100%;
         }
 
         .reset-btn:hover {
@@ -122,10 +130,67 @@
             transform: scale(1.05);
         }
 
+        .io-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            color: #dfe4ea;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .io-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Toast Notification */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: rgba(46, 204, 113, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: toastIn 0.3s forwards, toastOut 0.3s forwards 2.5s;
+        }
+
+        @keyframes toastIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes toastOut {
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
         /* --- RIGHT PANEL --- */
         .panel-right {
             width: 400px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
             border-left: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
@@ -144,7 +209,7 @@
             margin-bottom: 20px;
         }
 
-        /* Bulk Controls */
+        /* Store Controls */
         .store-controls {
             display: grid;
             grid-template-columns: 1fr 3fr;
@@ -156,10 +221,19 @@
             border: 1px solid var(--glass-border);
         }
 
-        .control-col { display: flex; flex-direction: column; gap: 4px; }
-        .amount-group { display: flex; gap: 5px; }
+        .control-col {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
 
-        .mode-btn, .amt-btn {
+        .amount-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        .mode-btn,
+        .amt-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             color: #a4b0be;
@@ -172,11 +246,24 @@
             flex: 1;
         }
 
-        .mode-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        .amt-btn.active { background: #eccc68; color: #1e1e2e; border-color: #eccc68; }
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .amt-btn.active {
+            background: #eccc68;
+            color: #1e1e2e;
+            border-color: #eccc68;
+        }
 
         /* Store List & Cards */
-        .store-list { overflow-y: auto; flex: 1; padding-right: 8px; }
+        .store-list {
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 8px;
+        }
 
         .upgrade-card {
             background: var(--glass);
@@ -201,42 +288,78 @@
         .upgrade-card::before {
             content: '';
             position: absolute;
-            left: 0; top: 0; bottom: 0; width: 4px;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
             background: var(--primary);
             opacity: 0.5;
             z-index: 5;
         }
 
-        .upgrade-card:hover .card-inner { transform: scale(1.01); }
+        .upgrade-card:hover .card-inner {
+            transform: scale(1.01);
+        }
+
         .upgrade-card:hover {
             background: rgba(255, 255, 255, 0.12);
             border-color: var(--primary);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .upgrade-card.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
+        .upgrade-card.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            filter: grayscale(1);
+        }
 
         .count-badge {
             position: absolute;
-            top: 8px; left: 11px;
-            font-size: 0.8rem; font-weight: 800;
+            top: 8px;
+            left: 11px;
+            font-size: 0.8rem;
+            font-weight: 800;
             color: var(--primary);
             background: rgba(112, 161, 255, 0.15);
-            padding: 2px 8px; border-radius: 6px;
+            padding: 2px 8px;
+            border-radius: 6px;
             z-index: 10;
         }
 
-        .u-content { padding-top: 15px; }
-        .u-header h3 { margin: 0; font-size: 1rem; color: #dfe4ea; }
-        .u-header p { margin: 4px 0 0 0; font-size: 0.75rem; color: #a4b0be; font-style: italic; }
-        .u-stats { margin-top: 6px; font-size: 0.75rem; color: var(--primary); font-weight: 700; }
+        .u-content {
+            padding-top: 15px;
+        }
+
+        .u-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #dfe4ea;
+        }
+
+        .u-header p {
+            margin: 4px 0 0 0;
+            font-size: 0.75rem;
+            color: #a4b0be;
+            font-style: italic;
+        }
+
+        .u-stats {
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
 
         .price-tag {
-            background: rgba(0,0,0,0.4);
-            padding: 8px 12px; border-radius: 8px;
-            font-weight: 600; color: #eccc68;
-            font-size: 0.9rem; display: flex;
-            align-items: center; align-self: center;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #eccc68;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            align-self: center;
             transition: color 0.2s;
         }
 
@@ -246,7 +369,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85); 
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -262,8 +385,116 @@
             text-align: center;
             max-width: 400px;
             color: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Cheat Modal Styling */
+        /* Cheat Modal Styling - Modern Glass */
+        .cheat-modal-box {
+            background: rgba(30, 30, 46, 0.95);
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            text-align: center;
+            width: 400px;
+            color: white;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .cheat-section {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cheat-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .cheat-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cheat-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .cheat-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .cheat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .cheat-btn-action {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .cheat-btn-action:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+
+        .quick-add-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quick-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #a4b0be;
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        select.cheat-input {
+            cursor: pointer;
+        }
+
+        select.cheat-input option {
+            background: #2f3542;
+            color: white;
         }
 
         .modal-buttons {
@@ -272,54 +503,121 @@
             gap: 15px;
             justify-content: center;
         }
-        
-        .confirm-btn { background: #ff4444; color: white; padding: 10px 20px; border: none; cursor: pointer; font-weight: bold; }
-        .cancel-btn { background: #555; color: white; padding: 10px 20px; border: none; cursor: pointer; }
-        
-        .confirm-btn:hover { background: #cc0000; }
 
-        /* Sell Mode Profit Indicator */
-        .mode-sell-active .price-tag { color: var(--profit-green); }
-        .mode-sell-active .upgrade-card::before { background: var(--profit-green); }
+        .confirm-btn {
+            background: #ff4444;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .cancel-btn {
+            background: #555;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .confirm-btn:hover {
+            background: #cc0000;
+        }
+
+        .mode-sell-active .price-tag {
+            color: var(--profit-green);
+        }
+
+        .mode-sell-active .upgrade-card::before {
+            background: var(--profit-green);
+        }
 
         /* FX */
         .floating-text {
-            position: absolute; font-weight: 800; font-size: 1.5rem;
-            pointer-events: none; animation: floatUp 0.8s forwards;
-            color: white; text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+            position: absolute;
+            font-weight: 800;
+            font-size: 1.5rem;
+            pointer-events: none;
+            animation: floatUp 0.8s forwards;
+            color: white;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
             z-index: 20;
         }
 
-         @keyframes floatUp {
-            0% { transform: translateY(0) scale(0.5); opacity: 1; }
-            50% { transform: translateY(-40px) scale(1.2); opacity: 1; }
-            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateY(-40px) scale(1.2);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
 
+        ::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 3px;
+        }
     </style>
 </head>
+
 <body>
 
-    <button class="reset-btn" onclick="showResetConfirmation()">Reset Game</button>
+    <div class="top-left-controls">
+        <button id="reset-main-btn" class="reset-btn" onclick="handleResetClick()">Reset Game</button>
+        <button class="io-btn" onclick="importSave()">Import Save</button>
+        <button class="io-btn" onclick="exportSave()">Export Save</button>
+    </div>
+
+    <div id="toast-container"></div>
 
     <div class="panel-center">
         <div class="stats-container">
@@ -352,33 +650,103 @@
         <div class="store-list" id="storeList"></div>
     </div>
 
+    <div id="reset-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <h2>ARE YOU SURE?</h2>
+            <p>All your progress, corners, and upgrades will be lost forever!</p>
+            <div class="modal-buttons">
+                <button onclick="confirmReset()" class="confirm-btn">Yes, restart</button>
+                <button onclick="closeModal()" class="cancel-btn">No, keep progress</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cheat-modal" class="modal-overlay" style="display: none;">
+        <div class="cheat-modal-box">
+            <div class="cheat-title">Admin Console</div>
+
+            <div class="cheat-section">
+                <div class="cheat-input-group">
+                    <input type="number" id="cheat-score-input" class="cheat-input" placeholder="Amount">
+                    <button class="cheat-btn-action" onclick="cheatAddScore()">ADD</button>
+                </div>
+                <div class="quick-add-grid">
+                    <button class="quick-btn" onclick="cheatScore(1000000)">+1M</button>
+                    <button class="quick-btn" onclick="cheatScore(10000000)">+10M</button>
+                    <button class="quick-btn" onclick="cheatScore(1000000000)">+1B</button>
+                    <button class="quick-btn" onclick="cheatScore(100000000000)">+100B</button>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <div style="text-align: left; margin-bottom: 5px; font-size: 0.8rem; color: #a4b0be; font-weight: 600;">
+                    Add Upgrade</div>
+                <div class="cheat-input-group">
+                    <select id="cheat-upgrade-select" class="cheat-input"></select>
+                </div>
+                <div class="cheat-input-group">
+                    <input type="number" id="cheat-upgrade-count" class="cheat-input" value="1" placeholder="Qty">
+                    <button class="cheat-btn-action" onclick="cheatAddUpgrade()">ADD</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button onclick="closeCheatModal()" class="cancel-btn">Close Console</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const defaultGame = {
             score: 0, clickPower: 1, autoCps: 0,
             upgrades: [
-                { id: 'pointer', name: "Reinforced Pointer", desc: "Strengthen your finger.", baseCost: 10, cps: 0, power: 1, count: 0 },
-                { id: 'business_card', name: "Corner's Business Card", desc: "Bone white. Silian Rail lettering.", baseCost: 15, cps: 0.5, power: 0, count: 0 },
-                { id: 'cursor', name: "Auto-Clicker Cursor", desc: "Clicks on its own. Technology!", baseCost: 100, cps: 2, power: 0, count: 0 },
-                { id: 'double_click', name: "Double-Click Technique", desc: "Two clicks for the price of one.", baseCost: 250, cps: 0, power: 3, count: 0 },
-                { id: 'coffee', name: "Corner's Espresso", desc: "He drinks it black. Increases speed.", baseCost: 500, cps: 8, power: 0, count: 0 },
-                { id: 'gym', name: "Corner's Gym Membership", desc: "Corner spots you. Maximum gains.", baseCost: 1200, cps: 0, power: 10, count: 0 },
-                { id: 'angle', name: "90 Degree Angle", desc: "The perfect corner. Pure geometry.", baseCost: 5000, cps: 25, power: 0, count: 0 },
-                { id: 'titanium_finger', name: "Titanium Finger", desc: "Indestructible clicking power.", baseCost: 8000, cps: 0, power: 25, count: 0 },
-                { id: 'office', name: "The Corner Office", desc: "Management material. Big profits.", baseCost: 20000, cps: 80, power: 0, count: 0 },
-                { id: 'adrenaline', name: "Adrenaline Rush", desc: "Your heart pounds. Everything clicks faster.", baseCost: 50000, cps: 0, power: 50, count: 0 },
-                { id: 'clone', name: "Corner Clone", desc: "Genetic copy. Does half the work.", baseCost: 100000, cps: 200, power: 0, count: 0 },
-                { id: 'lightning', name: "Lightning Reflexes", desc: "Clicks move at the speed of light.", baseCost: 250000, cps: 0, power: 150, count: 0 },
-                { id: 'hexagon', name: "The Hexagon", desc: "Six corners are better than four.", baseCost: 500000, cps: 600, power: 0, count: 0 },
-                { id: 'divine_touch', name: "Divine Touch", desc: "Your clicks are blessed by the gods.", baseCost: 1500000, cps: 0, power: 500, count: 0 },
-                { id: 'shrine', name: "Shrine of Corner", desc: "Worship the angle. Submit to Corner.", baseCost: 3000000, cps: 2500, power: 0, count: 0 },
-                { id: 'antimatter', name: "Antimatter Finger", desc: "Physics has no meaning anymore.", baseCost: 10000000, cps: 0, power: 2000, count: 0 },
-                { id: 'reality', name: "Cornerstone of Reality", desc: "The universe is just a box. We own it.", baseCost: 25000000, cps: 15000, power: 0, count: 0 }
+                { id: '001', name: "Ping Pong injury", desc: "It hurts to click, but it works.", baseCost: 15, cps: 0, power: 1, count: 0 },
+                { id: '002', name: "Invited", desc: "You actually got the invite.", baseCost: 100, cps: 1, power: 0, count: 0 },
+                { id: '003', name: "3 time Champion Fighter", desc: "Undefeated. Mostly.", baseCost: 500, cps: 5, power: 5, count: 0 },
+                { id: '004', name: "Acne, didn't shower", desc: "Natural musk increases focus.", baseCost: 2000, cps: 20, power: 0, count: 0 },
+                { id: '005', name: "Conner Shaking in the Rain", desc: "Vibrating with cold energy.", baseCost: 10000, cps: 80, power: 0, count: 0 },
+                { id: '006', name: "Brick", desc: "It's literally just a brick.", baseCost: 40000, cps: 200, power: 50, count: 0 },
+                { id: '007', name: "Ripped jeans", desc: "Maximum ventilation.", baseCost: 150000, cps: 600, power: 0, count: 0 },
+                { id: '008', name: "Wet Underwear", desc: "Uncomfortable, keeps you awake.", baseCost: 500000, cps: 2000, power: 0, count: 0 },
+                { id: '009', name: "Straight Hair", desc: "Aerodynamic clicking speed.", baseCost: 3000000, cps: 8000, power: 500, count: 0 },
+                { id: '010', name: "Am I Invited", desc: "Asking again just to be sure.", baseCost: 15000000, cps: 40000, power: 0, count: 0 },
+                { id: '011', name: "Conner's Group Chat", desc: "He actually replied to you.", baseCost: 25000000, cps: 60000, power: 0, count: 0 },
+                { id: '012', name: "Conner's Plus One", desc: "You are walking in with him.", baseCost: 40000000, cps: 85000, power: 0, count: 0 },
+                { id: '013', name: "Sitting Next to Conner", desc: "You can hear him breathing.", baseCost: 65000000, cps: 110000, power: 2500, count: 0 },
+                { id: '014', name: "No Maidens?", desc: "She gave you a fake number.", baseCost: 85000000, cps: 130000, power: 0, count: 0 },
+                { id: '015', name: "Instagram Reel Scroller", desc: "The sun is a myth. Reels are addicting.", baseCost: 120000000, cps: 0, power: 5000, count: 0 },
+                { id: '016', name: "Unopened Snapchats", desc: "47 delivered. 0 opened.", baseCost: 160000000, cps: 200000, power: 0, count: 0 },
+                { id: '017', name: "TAJ Finale", desc: "The Ultimate Conclusion.", baseCost: 1000000000, cps: 500000, power: 10000, count: 0 }
             ]
         };
 
         let Game = JSON.parse(JSON.stringify(defaultGame));
         let buyMode = 'buy';
         let buyAmount = 1;
+
+        const LEGACY_UPGRADE_MAP = {
+            'pointer': { id: '001', mult: 1.0 },       // 1 Power
+            'business_card': { id: '002', mult: 0.5 }, // 0.5 CPS -> 1 CPS
+            'cursor': { id: '002', mult: 2.0 },        // 2 CPS -> 1 CPS
+            'double_click': { id: '003', mult: 0.6 },  // 3 Power -> 5 Power
+            'coffee': { id: '003', mult: 1.6 },       // 8 CPS -> 5 CPS
+            'gym': { id: '003', mult: 2.0 },          // 10 Power -> 5 Power
+            'angle': { id: '004', mult: 1.25 },       // 25 CPS -> 20 CPS
+            'titanium_finger': { id: '006', mult: 0.5 }, // 25 Power -> 50 Power
+            'office': { id: '005', mult: 1.0 },        // 80 CPS -> 80 CPS
+            'adrenaline': { id: '006', mult: 1.0 },     // 50 Power -> 50 Power
+            'clone': { id: '006', mult: 1.0 },          // 200 CPS -> 200 CPS
+            'lightning': { id: '006', mult: 3.0 },      // 150 Power -> 50 Power
+            'hexagon': { id: '007', mult: 1.0 },       // 600 CPS -> 600 CPS
+            'divine_touch': { id: '015', mult: 0.1 },   // 500 Power -> 5000 Power (Power Only)
+            'shrine': { id: '008', mult: 1.25 },      // 2500 CPS -> 2000 CPS
+            'antimatter': { id: '015', mult: 0.4 },    // 2000 Power -> 5000 Power (Power Only)
+            'reality': { id: '009', mult: 1.875 }     // 15000 CPS -> 8000 CPS
+        };
+
+        // --- SECRET SEQUENCE VARIABLES ---
+        let secretSteps = 0;
+        let secretTimer = null;
 
         const els = {
             score: document.getElementById('score'),
@@ -401,8 +769,122 @@
             updateUI();
             requestAnimationFrame(gameLoop);
             setInterval(saveGame, 5000);
+
+            // Listen for corner clicks
+            document.addEventListener('mousedown', handleCornerClicks);
         }
 
+        // --- FORMATTING LOGIC (Fixed) ---
+        function formatNum(n) {
+            if (isNaN(n)) return "0";
+            return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function formatCompact(n) {
+            if (n === Infinity) return "Infinite";
+            if (isNaN(n) || n < 0) return "0";
+            if (n < 1000) return formatNum(n);
+
+            const suffixes = [
+                { value: 1e18, symbol: "Qi" },
+                { value: 1e15, symbol: "Qa" },
+                { value: 1e12, symbol: "T" },
+                { value: 1e9, symbol: "B" },
+                { value: 1e6, symbol: "M" },
+                { value: 1e3, symbol: "k" }
+            ];
+
+            for (let i = 0; i < suffixes.length; i++) {
+                if (n >= suffixes[i].value) {
+                    let num = n / suffixes[i].value;
+                    let formatted = num >= 100 ? Math.floor(num) : num.toFixed(1);
+                    return formatted.toString().replace(/\.0$/, '') + suffixes[i].symbol;
+                }
+            }
+            return formatNum(n);
+        }
+
+        // --- SECRET SEQUENCE LOGIC ---
+        function handleCornerClicks(e) {
+            const x = e.clientX;
+            const y = e.clientY;
+            const width = window.innerWidth;
+
+            if (secretSteps === 0 && x < 60 && y < 60) {
+                secretSteps = 1;
+                clearTimeout(secretTimer);
+                secretTimer = setTimeout(() => secretSteps = 0, 5000);
+            }
+            else if (secretSteps === 1 && x > width - 60 && y < 60) {
+                secretSteps = 2;
+            }
+        }
+
+        function handleResetClick() {
+            if (secretSteps === 2) {
+                openCheatModal();
+                secretSteps = 0;
+                clearTimeout(secretTimer);
+            } else {
+                showResetConfirmation();
+            }
+        }
+
+        // --- CHEAT FUNCTIONS ---
+        function openCheatModal() {
+            const modal = document.getElementById('cheat-modal');
+            const select = document.getElementById('cheat-upgrade-select');
+
+            // Populate select if empty
+            if (select.children.length === 0) {
+                Game.upgrades.forEach(u => {
+                    const opt = document.createElement('option');
+                    opt.value = u.id;
+                    opt.innerText = u.name;
+                    select.appendChild(opt);
+                });
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeCheatModal() { document.getElementById('cheat-modal').style.display = 'none'; }
+
+        function cheatScore(amt) {
+            Game.score += amt;
+            updateUI();
+            updateStoreAvailability(); // Updated to use optimized function
+        }
+
+        function cheatAddScore() {
+            const input = document.getElementById('cheat-score-input');
+            const val = parseFloat(input.value);
+            if (!isNaN(val) && val !== 0) {
+                cheatScore(val);
+                input.value = '';
+            }
+        }
+
+        function cheatAddUpgrade() {
+            const select = document.getElementById('cheat-upgrade-select');
+            const input = document.getElementById('cheat-upgrade-count');
+            const id = select.value;
+            const count = parseInt(input.value);
+
+            if (id && !isNaN(count) && count !== 0) {
+                const u = Game.upgrades.find(x => x.id === id);
+                if (u) {
+                    u.count += count;
+                    if (u.count < 0) u.count = 0; // Prevent negative
+                    recalcStats();
+                    updateUI();
+                    updateStoreAvailability(); // Updated to use optimized function
+                    renderStore(); // Force re-render to update counts visuals
+                }
+            }
+        }
+
+        // --- CORE GAME LOGIC ---
         function setMode(mode) {
             buyMode = mode;
             document.getElementById('mode-buy').classList.toggle('active', mode === 'buy');
@@ -433,47 +915,43 @@
         }
 
         function renderStore() {
-            if (els.store.children.length === 0) {
-                Game.upgrades.forEach((u, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'upgrade-card';
-                    card.id = `upgrade-${index}`;
-                    card.onclick = () => buyUpgrade(index);
-                    card.innerHTML = `
-                        <div class="card-inner">
-                            <div class="count-badge" id="count-${index}">0</div>
-                            <div class="u-content">
-                                <div class="u-header"><h3>${u.name}</h3><p>${u.desc}</p></div>
-                                <div class="u-stats" id="stats-${index}"></div>
-                            </div>
-                            <div class="price-tag" id="price-${index}">0</div>
-                        </div>`;
-                    els.store.appendChild(card);
-                });
-            }
+            els.store.innerHTML = '';
 
-            Game.upgrades.forEach((u, index) => {
+            Game.upgrades.forEach((u) => {
+                // 1. Calculate Cost and Affordability
                 const cost = getBulkCost(u, u.count, buyAmount);
-                const card = document.getElementById(`upgrade-${index}`);
+                const canAfford = (buyMode === 'buy') ? (Game.score >= cost) : (u.count >= buyAmount);
 
-                // FIXED LOGIC: Only disable for score when BUYING. Disable for count when SELLING.
-                if (buyMode === 'buy') {
-                    card.classList.toggle('disabled', Game.score < cost);
-                } else {
-                    card.classList.toggle('disabled', u.count < buyAmount);
-                }
+                // 2. Create the card element
+                const card = document.createElement('div');
+                card.className = `upgrade-card ${canAfford ? '' : 'disabled'}`;
+                card.onclick = () => buyUpgrade(u.id);
 
-                document.getElementById(`price-${index}`).innerText = formatCompact(cost);
-                document.getElementById(`count-${index}`).innerText = u.count;
+                // 3. Determine Stat Text
+                let statText = u.cps > 0 && u.power > 0
+                    ? `+${formatNum(u.cps)}/s | +${formatNum(u.power)} Click`
+                    : u.cps > 0
+                        ? `+${formatNum(u.cps)} / sec`
+                        : `+${formatNum(u.power)} Click Power`;
 
-                let statText = u.cps > 0 && u.power > 0 ? `+${formatNum(u.cps)}/s | +${formatNum(u.power)} Click` :
-                               u.cps > 0 ? `+${formatNum(u.cps)} / sec` : `+${formatNum(u.power)} Click Power`;
-                document.getElementById(`stats-${index}`).innerText = statText;
+                // 4. Fill HTML
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="count-badge">${u.count}</div>
+                        <div class="u-content">
+                            <div class="u-header"><h3>${u.name}</h3><p>${u.desc}</p></div>
+                            <div class="u-stats">${statText}</div>
+                        </div>
+                        <div class="price-tag">${formatCompact(cost)}</div>
+                    </div>`;
+
+                // 5. Append to store
+                els.store.appendChild(card);
             });
         }
 
-        function buyUpgrade(index) {
-            const u = Game.upgrades[index];
+        function buyUpgrade(id) {
+            const u = Game.upgrades.find(item => item.id === id);
             const cost = getBulkCost(u, u.count, buyAmount);
 
             if (buyMode === 'buy' && Game.score >= cost) {
@@ -498,8 +976,10 @@
 
         function scream() {
             const ut = new SpeechSynthesisUtterance(SCREAM_WORD);
-            ut.rate = 1 + (Math.random() * 0.5);
-            ut.pitch = (Game.upgrades[16].count > 0) ? 0.1 : 0.8 + (Math.random() * 0.8);
+            const finale = Game.upgrades.find(u => u.id === '017');
+
+            ut.rate = 1 + (Math.random() * 0.3);
+            ut.pitch = (finale && finale.count > 0) ? 0.1 : 0.8 + (Math.random() * 0.5);
             window.speechSynthesis.speak(ut);
         }
 
@@ -509,7 +989,7 @@
             spawnFloatingText(e.clientX, e.clientY, `+${formatCompact(Game.clickPower)}`);
             scream();
             updateUI();
-            renderStore(); 
+            renderStore();
         });
 
         function spawnFloatingText(x, y, txt) {
@@ -527,15 +1007,37 @@
         function gameLoop(currentTime) {
             const deltaTime = (currentTime - lastTime) / 1000;
             lastTime = currentTime;
-            if(Game.autoCps > 0) {
+            if (Game.autoCps > 0) {
                 Game.score += (Game.autoCps * deltaTime);
                 updateUI();
-                renderStore(); 
+                updateStoreAvailability();
             }
             requestAnimationFrame(gameLoop);
         }
 
+        function updateStoreAvailability() {
+            const cards = els.store.children;
+            // Ensure we don't crash if for some reason lengths mismatch, 
+            // though renderStore() keeps them synced.
+            const len = Math.min(cards.length, Game.upgrades.length);
+
+            for (let i = 0; i < len; i++) {
+                const u = Game.upgrades[i];
+                const card = cards[i];
+
+                const cost = getBulkCost(u, u.count, buyAmount);
+                const canAfford = (buyMode === 'buy') ? (Game.score >= cost) : (u.count >= buyAmount);
+
+                if (canAfford) {
+                    card.classList.remove('disabled');
+                } else {
+                    card.classList.add('disabled');
+                }
+            }
+        }
+
         function updateUI() {
+            if (!els.score) return;
             els.score.innerText = formatNum(Math.floor(Game.score));
             els.cps.innerText = `${formatCompact(Game.autoCps)} / sec`;
         }
@@ -544,28 +1046,41 @@
 
         function loadGame() {
             const saved = localStorage.getItem('cornerClickerSave');
-            if(saved) {
+            if (saved) {
                 const parsed = JSON.parse(saved);
-                Game = { ...defaultGame, ...parsed };
-                Game.upgrades = defaultGame.upgrades.map((u, i) => parsed.upgrades[i] || u);
+
+                Game.score = Number(parsed.score) || 0;
+
+                const finalCounts = {};
+                Game.upgrades.forEach(u => finalCounts[u.id] = 0);
+
+                parsed.upgrades.forEach(savedU => {
+                    const count = Number(savedU.count) || 0;
+                    if (finalCounts[savedU.id] !== undefined) {
+                        finalCounts[savedU.id] += count;
+                    } else {
+                        const legacy = LEGACY_UPGRADE_MAP[savedU.id];
+                        if (legacy && finalCounts[legacy.id] !== undefined) {
+                            finalCounts[legacy.id] += count * legacy.mult;
+                        }
+                    }
+                });
+
+                Game.upgrades.forEach(u => u.count = Math.round(finalCounts[u.id]));
+
                 recalcStats();
             }
         }
 
-        function showResetConfirmation() {
-            const modal = document.getElementById('reset-modal');
-            modal.style.display = 'flex';
-        }
+        function showResetConfirmation() { document.getElementById('reset-modal').style.display = 'flex'; }
 
         function closeModal() {
             const modal = document.getElementById('reset-modal');
-            // Add a simple fade out effect before hiding
             modal.style.opacity = '0';
             modal.style.transition = 'opacity 0.2s ease';
-
             setTimeout(() => {
                 modal.style.display = 'none';
-                modal.style.opacity = '1'; // Reset opacity for the next time it opens
+                modal.style.opacity = '1';
             }, 200);
         }
 
@@ -574,24 +1089,99 @@
             location.reload();
         }
 
-        function formatNum(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
-        function formatCompact(n) {
-            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-            if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
-            return formatNum(Math.floor(n));
+        // --- IMPORT / EXPORT SYSTEM ---
+        function exportSave() {
+            try {
+                const saveStr = btoa(JSON.stringify(Game));
+                navigator.clipboard.writeText(saveStr).then(() => {
+                    showToast("Save copied to clipboard!");
+                });
+            } catch (err) {
+                showToast("Failed to export save.");
+                console.error(err);
+            }
         }
+
+        function importSave() {
+            const code = prompt("Paste your save code here:");
+            if (!code) return;
+
+            try {
+                let data;
+
+                // Try parsing as raw JSON first
+                try {
+                    data = JSON.parse(code);
+                } catch (e) {
+                    // Not JSON, try Base64 decode
+                    try {
+                        const jsonStr = atob(code);
+                        data = JSON.parse(jsonStr);
+                    } catch (e2) {
+                        throw new Error("Invalid format");
+                    }
+                }
+
+                // Basic validation
+                if (data.score === undefined || !Array.isArray(data.upgrades)) {
+                    throw new Error("Invalid save data");
+                }
+
+                // Merge with default game to ensure compatibility
+                Game = JSON.parse(JSON.stringify(defaultGame));
+                Game.score = Number(data.score) || 0;
+
+                const finalCounts = {};
+                Game.upgrades.forEach(u => finalCounts[u.id] = 0);
+
+                data.upgrades.forEach(savedU => {
+                    const count = Number(savedU.count) || 0;
+                    if (finalCounts[savedU.id] !== undefined) {
+                        finalCounts[savedU.id] += count;
+                    } else {
+                        const legacy = LEGACY_UPGRADE_MAP[savedU.id];
+                        if (legacy && finalCounts[legacy.id] !== undefined) {
+                            finalCounts[legacy.id] += count * legacy.mult;
+                        }
+                    }
+                });
+
+                Game.upgrades.forEach(u => u.count = Math.round(finalCounts[u.id]));
+
+                recalcStats();
+                updateUI();
+                renderStore();
+                saveGame();
+                showToast("Save loaded successfully!");
+
+            } catch (err) {
+                showToast("Invalid save code!");
+                console.error(err);
+            }
+        }
+
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.innerText = msg;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000); // Remove after animation
+        }
+
 
         init();
     </script>
     <div id="reset-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-box">
-        <h2>ARE YOU SURE?</h2>
-        <p>All your progress, corners, and upgrades will be lost forever!</p>
-        <div class="modal-buttons">
-            <button onclick="closeModal()" class="cancel-btn">No, keep progress</button>
-            <button onclick="confirmReset()" class="confirm-btn">Yes, reset progress</button>
+        <div class="modal-box">
+            <h2>ARE YOU SURE?</h2>
+            <p>All your progress and your Conner-themed collection will be lost!</p>
+            <div class="modal-buttons">
+                <button onclick="closeModal()" class="cancel-btn">No, keep progress</button>
+                <button onclick="confirmReset()" class="confirm-btn">Yes, reset</button>
+            </div>
         </div>
     </div>
-</div>
 </body>
+
 </html>
