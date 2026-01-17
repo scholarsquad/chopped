@@ -345,7 +345,7 @@
 <body>
 
     <button id="reset-main-btn" class="reset-btn" onclick="handleResetClick()">Reset Game</button>
-
+    
     <div class="panel-center">
         <div class="stats-container">
             <span id="score">0</span>
@@ -564,19 +564,28 @@
             }
             return Math.floor(total);
         }
+        
         function renderStore() {
             els.store.innerHTML = '';
+            
             Game.upgrades.forEach((u) => {
+                // 1. Calculate Cost and Affordability
                 const cost = getBulkCost(u, u.count, buyAmount);
                 const canAfford = (buyMode === 'buy') ? (Game.score >= cost) : (u.count >= buyAmount);
-
+        
+                // 2. Create the card element
                 const card = document.createElement('div');
                 card.className = `upgrade-card ${canAfford ? '' : 'disabled'}`;
                 card.onclick = () => buyUpgrade(u.id);
-
-                let statText = u.cps > 0 && u.power > 0 ? `+${formatNum(u.cps)}/s | +${formatNum(u.power)} Click` :
-                               u.cps > 0 ? `+${formatNum(u.cps)} / sec` : `+${formatNum(u.power)} Click Power`;
-
+        
+                // 3. Determine Stat Text
+                let statText = u.cps > 0 && u.power > 0 
+                    ? `+${formatNum(u.cps)}/s | +${formatNum(u.power)} Click` 
+                    : u.cps > 0 
+                        ? `+${formatNum(u.cps)} / sec` 
+                        : `+${formatNum(u.power)} Click Power`;
+        
+                // 4. Fill HTML
                 card.innerHTML = `
                     <div class="card-inner">
                         <div class="count-badge">${u.count}</div>
@@ -586,26 +595,9 @@
                         </div>
                         <div class="price-tag">${formatCompact(cost)}</div>
                     </div>`;
-                els.store.appendChild(card);
-            });
-        }
         
-            Game.upgrades.forEach((u, index) => {
-                const cost = getBulkCost(u, u.count, buyAmount);
-                const card = document.getElementById(`upgrade-${index}`);
-                
-                if (buyMode === 'buy') {
-                    card.classList.toggle('disabled', Game.score < cost);
-                } else {
-                    card.classList.toggle('disabled', u.count < buyAmount);
-                }
-
-                document.getElementById(`price-${index}`).innerText = formatCompact(cost);
-                document.getElementById(`count-${index}`).innerText = u.count;
-                
-                let statText = u.cps > 0 && u.power > 0 ? `+${formatCompact(u.cps)}/s | +${formatCompact(u.power)} Click` :
-                               u.cps > 0 ? `+${formatCompact(u.cps)} / sec` : `+${formatCompact(u.power)} Click Power`;
-                document.getElementById(`stats-${index}`).innerText = statText;
+                // 5. Append to store
+                els.store.appendChild(card);
             });
         }
 
@@ -727,6 +719,7 @@
             localStorage.clear();
             location.reload();
         }
+        
 
         init();
     </script>
