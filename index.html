@@ -408,23 +408,23 @@
         const defaultGame = {
             score: 0, clickPower: 1, autoCps: 0,
             upgrades: [
-                { id: 'pointer', name: "Reinforced Pointer", desc: "Strengthen your finger.", baseCost: 10, cps: 0, power: 1, count: 0 },
-                { id: 'business_card', name: "Corner's Business Card", desc: "Bone white. Silian Rail lettering.", baseCost: 15, cps: 1, power: 0, count: 0 },
-                { id: 'cursor', name: "Auto-Clicker Cursor", desc: "Clicks on its own. Technology!", baseCost: 100, cps: 8, power: 0, count: 0 },
-                { id: 'double_click', name: "Double-Click Technique", desc: "Two clicks for the price of one.", baseCost: 250, cps: 0, power: 10, count: 0 },
-                { id: 'coffee', name: "Corner's Espresso", desc: "He drinks it black. Increases speed.", baseCost: 500, cps: 40, power: 0, count: 0 },
-                { id: 'gym', name: "Corner's Gym Membership", desc: "Corner spots you. Maximum gains.", baseCost: 1200, cps: 0, power: 60, count: 0 },
-                { id: 'angle', name: "90 Degree Angle", desc: "The perfect corner. Pure geometry.", baseCost: 5000, cps: 400, power: 0, count: 0 },
-                { id: 'titanium_finger', name: "Titanium Finger", desc: "Indestructible clicking power.", baseCost: 8000, cps: 0, power: 500, count: 0 },
-                { id: 'office', name: "The Corner Office", desc: "Management material. Big profits.", baseCost: 20000, cps: 2000, power: 0, count: 0 },
-                { id: 'adrenaline', name: "Adrenaline Rush", desc: "Your heart pounds. Everything clicks faster.", baseCost: 50000, cps: 0, power: 4000, count: 0 },
-                { id: 'clone', name: "Corner Clone", desc: "Genetic copy. Does half the work.", baseCost: 100000, cps: 10000, power: 0, count: 0 },
-                { id: 'lightning', name: "Lightning Reflexes", desc: "Clicks move at the speed of light.", baseCost: 250000, cps: 0, power: 25000, count: 0 },
-                { id: 'hexagon', name: "The Hexagon", desc: "Six corners are better than four.", baseCost: 500000, cps: 55000, power: 0, count: 0 },
-                { id: 'divine_touch', name: "Divine Touch", desc: "Your clicks are blessed by the gods.", baseCost: 1500000, cps: 0, power: 150000, count: 0 },
-                { id: 'shrine', name: "Shrine of Corner", desc: "Worship the angle. Submit to Corner.", baseCost: 3000000, cps: 350000, power: 0, count: 0 },
-                { id: 'antimatter', name: "Antimatter Finger", desc: "Physics has no meaning anymore.", baseCost: 15000000, cps: 0, power: 500000, count: 0 },
-                { id: 'reality', name: "Cornerstone of Reality", desc: "The universe is just a box. We own it.", baseCost: 25000000, cps: 1000000, power: 0, count: 0 } 
+                { id: '001', name: "Ping Pong injury", desc: "It hurts to click, but it works.", baseCost: 15, cps: 0, power: 1, count: 0 },
+                { id: '002', name: "Invited", desc: "You actually got the invite.", baseCost: 100, cps: 1, power: 0, count: 0 },
+                { id: '003', name: "3 time Champion Fighter", desc: "Undefeated. Mostly.", baseCost: 500, cps: 5, power: 5, count: 0 },
+                { id: '004', name: "Acne, didn't shower", desc: "Natural musk increases focus.", baseCost: 2000, cps: 20, power: 0, count: 0 },
+                { id: '005', name: "Conner Shaking in the Rain", desc: "Vibrating with cold energy.", baseCost: 10000, cps: 80, power: 0, count: 0 },
+                { id: '006', name: "Brick", desc: "It's literally just a brick.", baseCost: 40000, cps: 200, power: 50, count: 0 },
+                { id: '007', name: "Ripped jeans", desc: "Maximum ventilation.", baseCost: 150000, cps: 600, power: 0, count: 0 },
+                { id: '008', name: "Wet Underwear", desc: "Uncomfortable, keeps you awake.", baseCost: 500000, cps: 2000, power: 0, count: 0 },
+                { id: '009', name: "Straight Hair", desc: "Aerodynamic clicking speed.", baseCost: 3000000, cps: 8000, power: 500, count: 0 },
+                { id: '010', name: "Am I Invited", desc: "Asking again just to be sure.", baseCost: 15000000, cps: 40000, power: 0, count: 0 },
+                { id: '011', name: "Conner's Group Chat", desc: "He actually replied to you.", baseCost: 25000000, cps: 60000, power: 0, count: 0 },
+                { id: '012', name: "Conner's Plus One", desc: "You are walking in with him.", baseCost: 40000000, cps: 85000, power: 0, count: 0 },
+                { id: '013', name: "Sitting Next to Conner", desc: "You can hear him breathing.", baseCost: 65000000, cps: 110000, power: 2500, count: 0 },
+                { id: '014', name: "No Maidens?", desc: "She gave you a fake number.", baseCost: 85000000, cps: 130000, power: 0, count: 0 },
+                { id: '015', name: "Instagram Reel Scroller", desc: "The sun is a myth. Reels are addicting.", baseCost: 120000000, cps: 0, power: 5000, count: 0 },
+                { id: '016', name: "Unopened Snapchats", desc: "47 delivered. 0 opened.", baseCost: 160000000, cps: 200000, power: 0, count: 0 },
+                { id: '017', name: "TAJ Finale", desc: "The Ultimate Conclusion.", baseCost: 1000000000, cps: 500000, power: 10000, count: 0 }
             ]
         };
 
@@ -564,27 +564,32 @@
             }
             return Math.floor(total);
         }
-
         function renderStore() {
-            if (els.store.children.length === 0) {
-                Game.upgrades.forEach((u, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'upgrade-card';
-                    card.id = `upgrade-${index}`;
-                    card.onclick = () => buyUpgrade(index);
-                    card.innerHTML = `
-                        <div class="card-inner">
-                            <div class="count-badge" id="count-${index}">0</div>
-                            <div class="u-content">
-                                <div class="u-header"><h3>${u.name}</h3><p>${u.desc}</p></div>
-                                <div class="u-stats" id="stats-${index}"></div>
-                            </div>
-                            <div class="price-tag" id="price-${index}">0</div>
-                        </div>`;
-                    els.store.appendChild(card);
-                });
-            }
+            els.store.innerHTML = '';
+            Game.upgrades.forEach((u) => {
+                const cost = getBulkCost(u, u.count, buyAmount);
+                const canAfford = (buyMode === 'buy') ? (Game.score >= cost) : (u.count >= buyAmount);
 
+                const card = document.createElement('div');
+                card.className = `upgrade-card ${canAfford ? '' : 'disabled'}`;
+                card.onclick = () => buyUpgrade(u.id);
+
+                let statText = u.cps > 0 && u.power > 0 ? `+${formatNum(u.cps)}/s | +${formatNum(u.power)} Click` :
+                               u.cps > 0 ? `+${formatNum(u.cps)} / sec` : `+${formatNum(u.power)} Click Power`;
+
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="count-badge">${u.count}</div>
+                        <div class="u-content">
+                            <div class="u-header"><h3>${u.name}</h3><p>${u.desc}</p></div>
+                            <div class="u-stats">${statText}</div>
+                        </div>
+                        <div class="price-tag">${formatCompact(cost)}</div>
+                    </div>`;
+                els.store.appendChild(card);
+            });
+        }
+        
             Game.upgrades.forEach((u, index) => {
                 const cost = getBulkCost(u, u.count, buyAmount);
                 const card = document.getElementById(`upgrade-${index}`);
@@ -604,8 +609,8 @@
             });
         }
 
-        function buyUpgrade(index) {
-            const u = Game.upgrades[index];
+        function buyUpgrade(id) {
+            const u = Game.upgrades.find(item => item.id === id);
             const cost = getBulkCost(u, u.count, buyAmount);
 
             if (buyMode === 'buy' && Game.score >= cost) {
@@ -630,8 +635,10 @@
 
         function scream() {
             const ut = new SpeechSynthesisUtterance(SCREAM_WORD);
-            ut.rate = 1 + (Math.random() * 0.5);
-            ut.pitch = (Game.upgrades[16].count > 0) ? 0.1 : 0.8 + (Math.random() * 0.8);
+            const finale = Game.upgrades.find(u => u.id === '017');
+            
+            ut.rate = 1 + (Math.random() * 0.3);
+            ut.pitch = (finale && finale.count > 0) ? 0.1 : 0.8 + (Math.random() * 0.5);
             window.speechSynthesis.speak(ut);
         }
 
@@ -675,19 +682,35 @@
 
         function saveGame() { localStorage.setItem('cornerClickerSave', JSON.stringify(Game)); }
 
-        function loadGame() {
+         function loadGame() {
             const saved = localStorage.getItem('cornerClickerSave');
-            if(saved) {
+            if (saved) {
                 const parsed = JSON.parse(saved);
-                Game = { ...defaultGame, ...parsed };
-                Game.upgrades = defaultGame.upgrades.map((u, i) => {
-                    const savedUpgrade = parsed.upgrades.find(pu => pu.id === u.id);
-                    return savedUpgrade ? { ...u, count: savedUpgrade.count } : u;
+                
+                Game.score = Number(parsed.score) || 0;
+
+                const legacyMap = {
+                    'pointer': '001', 'business_card': '002', 'cursor': '003',
+                    'double_click': '004', 'coffee': '005', 'gym': '006',
+                    'angle': '007', 'titanium_finger': '008', 'office': '009',
+                    'adrenaline': '010', 'clone': '011', 'lightning': '012',
+                    'hexagon': '013', 'divine_touch': '014', 'shrine': '015',
+                    'antimatter': '016', 'reality': '017'
+                };
+
+                Game.upgrades.forEach((currentU) => {
+                    const savedU = parsed.upgrades.find(u => 
+                        u.id === currentU.id || legacyMap[u.id] === currentU.id
+                    );
+                    if (savedU) {
+                        currentU.count = Number(savedU.count) || 0;
+                    }
                 });
+                
                 recalcStats();
             }
         }
-        
+
         function showResetConfirmation() { document.getElementById('reset-modal').style.display = 'flex'; }
         
         function closeModal() {
@@ -707,5 +730,15 @@
 
         init();
     </script>
+    <div id="reset-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <h2>ARE YOU SURE?</h2>
+            <p>All your progress and your Conner-themed collection will be lost!</p>
+            <div class="modal-buttons">
+                <button onclick="closeModal()" class="cancel-btn">No, keep progress</button>
+                <button onclick="confirmReset()" class="confirm-btn">Yes, reset</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
