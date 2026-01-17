@@ -8,6 +8,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap');
 
+        * {
+            box-sizing: border-box;
+        }
+
         :root {
             --primary: #70a1ff;
             --accent: #ff4757;
@@ -648,6 +652,24 @@
             gap: 10px;
             justify-content: center;
         }
+
+        /* --- GLOBAL SCROLLBAR --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
     </style>
 </head>
 
@@ -1110,16 +1132,20 @@
 
         function updateStoreAvailability() {
             const cards = els.store.children;
-            // Ensure we don't crash if for some reason lengths mismatch, 
-            // though renderStore() keeps them synced.
             const len = Math.min(cards.length, Game.upgrades.length);
 
             for (let i = 0; i < len; i++) {
                 const u = Game.upgrades[i];
                 const card = cards[i];
 
-                const cost = getBulkCost(u, u.count, buyAmount);
-                const canAfford = (buyMode === 'buy') ? (Game.score >= cost) : (u.count >= buyAmount);
+                let effectiveAmt = buyAmount;
+                if (buyAmount === 'max') {
+                    effectiveAmt = getMaxAmount(u, u.count);
+                    if (effectiveAmt === 0) effectiveAmt = 1;
+                }
+
+                const cost = getBulkCost(u, u.count, effectiveAmt);
+                const canAfford = (buyMode === 'buy') ? (Game.score >= cost) : (u.count >= effectiveAmt);
 
                 if (canAfford) {
                     card.classList.remove('disabled');
