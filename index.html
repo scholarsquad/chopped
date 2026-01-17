@@ -724,6 +724,26 @@
         let buyMode = 'buy';
         let buyAmount = 1;
 
+        const LEGACY_UPGRADE_MAP = {
+            'pointer': { id: '001', mult: 1.0 },       // 1 Power
+            'business_card': { id: '002', mult: 0.5 }, // 0.5 CPS -> 1 CPS
+            'cursor': { id: '002', mult: 2.0 },        // 2 CPS -> 1 CPS
+            'double_click': { id: '003', mult: 0.6 },  // 3 Power -> 5 Power
+            'coffee': { id: '003', mult: 1.6 },       // 8 CPS -> 5 CPS
+            'gym': { id: '003', mult: 2.0 },          // 10 Power -> 5 Power
+            'angle': { id: '004', mult: 1.25 },       // 25 CPS -> 20 CPS
+            'titanium_finger': { id: '006', mult: 0.5 }, // 25 Power -> 50 Power
+            'office': { id: '005', mult: 1.0 },        // 80 CPS -> 80 CPS
+            'adrenaline': { id: '006', mult: 1.0 },     // 50 Power -> 50 Power
+            'clone': { id: '006', mult: 1.0 },          // 200 CPS -> 200 CPS
+            'lightning': { id: '006', mult: 3.0 },      // 150 Power -> 50 Power
+            'hexagon': { id: '007', mult: 1.0 },       // 600 CPS -> 600 CPS
+            'divine_touch': { id: '015', mult: 0.1 },   // 500 Power -> 5000 Power (Power Only)
+            'shrine': { id: '008', mult: 1.25 },      // 2500 CPS -> 2000 CPS
+            'antimatter': { id: '015', mult: 0.4 },    // 2000 Power -> 5000 Power (Power Only)
+            'reality': { id: '009', mult: 1.875 }     // 15000 CPS -> 8000 CPS
+        };
+
         // --- SECRET SEQUENCE VARIABLES ---
         let secretSteps = 0;
         let secretTimer = null;
@@ -1031,23 +1051,22 @@
 
                 Game.score = Number(parsed.score) || 0;
 
-                const legacyMap = {
-                    'pointer': '001', 'business_card': '002', 'cursor': '003',
-                    'double_click': '004', 'coffee': '005', 'gym': '006',
-                    'angle': '007', 'titanium_finger': '008', 'office': '009',
-                    'adrenaline': '010', 'clone': '011', 'lightning': '012',
-                    'hexagon': '013', 'divine_touch': '014', 'shrine': '015',
-                    'antimatter': '016', 'reality': '017'
-                };
+                const finalCounts = {};
+                Game.upgrades.forEach(u => finalCounts[u.id] = 0);
 
-                Game.upgrades.forEach((currentU) => {
-                    const savedU = parsed.upgrades.find(u =>
-                        u.id === currentU.id || legacyMap[u.id] === currentU.id
-                    );
-                    if (savedU) {
-                        currentU.count = Number(savedU.count) || 0;
+                parsed.upgrades.forEach(savedU => {
+                    const count = Number(savedU.count) || 0;
+                    if (finalCounts[savedU.id] !== undefined) {
+                        finalCounts[savedU.id] += count;
+                    } else {
+                        const legacy = LEGACY_UPGRADE_MAP[savedU.id];
+                        if (legacy && finalCounts[legacy.id] !== undefined) {
+                            finalCounts[legacy.id] += count * legacy.mult;
+                        }
                     }
                 });
+
+                Game.upgrades.forEach(u => u.count = Math.round(finalCounts[u.id]));
 
                 recalcStats();
             }
@@ -1112,24 +1131,22 @@
                 Game = JSON.parse(JSON.stringify(defaultGame));
                 Game.score = Number(data.score) || 0;
 
-                // Restore upgrades logic from loadGame
-                const legacyMap = {
-                    'pointer': '001', 'business_card': '002', 'cursor': '003',
-                    'double_click': '004', 'coffee': '005', 'gym': '006',
-                    'angle': '007', 'titanium_finger': '008', 'office': '009',
-                    'adrenaline': '010', 'clone': '011', 'lightning': '012',
-                    'hexagon': '013', 'divine_touch': '014', 'shrine': '015',
-                    'antimatter': '016', 'reality': '017'
-                };
+                const finalCounts = {};
+                Game.upgrades.forEach(u => finalCounts[u.id] = 0);
 
-                Game.upgrades.forEach((currentU) => {
-                    const savedU = data.upgrades.find(u =>
-                        u.id === currentU.id || legacyMap[u.id] === currentU.id
-                    );
-                    if (savedU) {
-                        currentU.count = Number(savedU.count) || 0;
+                data.upgrades.forEach(savedU => {
+                    const count = Number(savedU.count) || 0;
+                    if (finalCounts[savedU.id] !== undefined) {
+                        finalCounts[savedU.id] += count;
+                    } else {
+                        const legacy = LEGACY_UPGRADE_MAP[savedU.id];
+                        if (legacy && finalCounts[legacy.id] !== undefined) {
+                            finalCounts[legacy.id] += count * legacy.mult;
+                        }
                     }
                 });
+
+                Game.upgrades.forEach(u => u.count = Math.round(finalCounts[u.id]));
 
                 recalcStats();
                 updateUI();
