@@ -707,7 +707,7 @@
             <div class="amount-group">
                 <button id="amt-1" class="amt-btn active" onclick="setAmount(1)">1</button>
                 <button id="amt-10" class="amt-btn" onclick="setAmount(10)">10</button>
-                <button id="amt-100" class="amt-btn" onclick="setAmount(100)">100</button>
+                <button id="amt-max" class="amt-btn" onclick="setAmount('max')">MAX</button>
             </div>
         </div>
 
@@ -974,8 +974,28 @@
 
         function setAmount(amt) {
             buyAmount = amt;
-            [1, 10, 100].forEach(a => document.getElementById(`amt-${a}`).classList.toggle('active', a === amt));
+            [1, 10, 'max'].forEach(a => {
+                const el = document.getElementById(`amt-${a}`);
+                if (el) el.classList.toggle('active', a === amt);
+            });
             renderStore();
+        }
+
+        function getMaxAmount(u, count) {
+            if (buyMode === 'sell') return u.count;
+            let tempScore = Game.score;
+            let amt = 0;
+            while (true) {
+                let cost = Math.floor(u.baseCost * Math.pow(1.15, count + amt));
+                if (tempScore >= cost) {
+                    tempScore -= cost;
+                    amt++;
+                } else {
+                    break;
+                }
+                if (amt >= 1000) break; // Safety cap to prevent infinite loops/hangs
+            }
+            return amt;
         }
 
         function getBulkCost(u, count, amount) {
@@ -998,8 +1018,14 @@
 
             Game.upgrades.forEach((u) => {
                 // 1. Calculate Cost and Affordability
-                const cost = getBulkCost(u, u.count, buyAmount);
-                const canAfford = (buyMode === 'buy') ? (Game.score >= cost) : (u.count >= buyAmount);
+                let effectiveAmt = buyAmount;
+                if (buyAmount === 'max') {
+                    effectiveAmt = getMaxAmount(u, u.count);
+                    if (effectiveAmt === 0) effectiveAmt = 1; // Show cost of next 1 if none affordable
+                }
+
+                const cost = getBulkCost(u, u.count, effectiveAmt);
+                const canAfford = (buyMode === 'buy') ? (Game.score >= cost) : (u.count >= effectiveAmt);
 
                 // 2. Create the card element
                 const card = document.createElement('div');
@@ -1021,7 +1047,7 @@
                             <div class="u-header"><h3>${u.name}</h3><p>${u.desc}</p></div>
                             <div class="u-stats">${statText}</div>
                         </div>
-                        <div class="price-tag">${formatCompact(cost)}</div>
+                        <div class="price-tag">${buyAmount === 'max' ? (getMaxAmount(u, u.count) || 1) + 'x ' : ''}${formatCompact(cost)}</div>
                     </div>`;
 
                 // 5. Append to store
@@ -1031,14 +1057,24 @@
 
         function buyUpgrade(id) {
             const u = Game.upgrades.find(item => item.id === id);
-            const cost = getBulkCost(u, u.count, buyAmount);
+            let effectiveAmt = buyAmount;
+            if (buyAmount === 'max') {
+                effectiveAmt = getMaxAmount(u, u.count);
+            }
+
+            if (effectiveAmt <= 0 && buyMode === 'buy') {
+                // Try to buy at least 1 if we click but can't afford "max" (which is 0)
+                effectiveAmt = 1;
+            }
+
+            const cost = getBulkCost(u, u.count, effectiveAmt);
 
             if (buyMode === 'buy' && Game.score >= cost) {
                 Game.score -= cost;
-                u.count += buyAmount;
-            } else if (buyMode === 'sell' && u.count >= buyAmount) {
+                u.count += effectiveAmt;
+            } else if (buyMode === 'sell' && u.count >= effectiveAmt && effectiveAmt > 0) {
                 Game.score += cost;
-                u.count -= buyAmount;
+                u.count -= effectiveAmt;
             } else { return; }
 
             recalcStats();
@@ -1096,16 +1132,20 @@
 
         function updateStoreAvailability() {
             const cards = els.store.children;
-            // Ensure we don't crash if for some reason lengths mismatch, 
-            // though renderStore() keeps them synced.
             const len = Math.min(cards.length, Game.upgrades.length);
 
             for (let i = 0; i < len; i++) {
                 const u = Game.upgrades[i];
                 const card = cards[i];
 
-                const cost = getBulkCost(u, u.count, buyAmount);
-                const canAfford = (buyMode === 'buy') ? (Game.score >= cost) : (u.count >= buyAmount);
+                let effectiveAmt = buyAmount;
+                if (buyAmount === 'max') {
+                    effectiveAmt = getMaxAmount(u, u.count);
+                    if (effectiveAmt === 0) effectiveAmt = 1;
+                }
+
+                const cost = getBulkCost(u, u.count, effectiveAmt);
+                const canAfford = (buyMode === 'buy') ? (Game.score >= cost) : (u.count >= effectiveAmt);
 
                 if (canAfford) {
                     card.classList.remove('disabled');
