@@ -697,7 +697,7 @@
     </div>
 
     <div class="panel-right">
-        <div class="panel-title">The Corner Store</div>
+        <div class="panel-title">The Upgrade shop</div>
 
         <div class="store-controls">
             <div class="control-col">
@@ -779,23 +779,23 @@
         const defaultGame = {
             score: 0, clickPower: 1, autoCps: 0,
             upgrades: [
-                { id: '001', name: "Ping Pong injury", desc: "It hurts to click, but it works.", baseCost: 15, cps: 0, power: 1, count: 0 },
-                { id: '002', name: "Invited", desc: "You actually got the invite.", baseCost: 100, cps: 1, power: 0, count: 0 },
-                { id: '003', name: "3 time Champion Fighter", desc: "Undefeated. Mostly.", baseCost: 500, cps: 5, power: 5, count: 0 },
-                { id: '004', name: "Acne, didn't shower", desc: "Natural musk increases focus.", baseCost: 2000, cps: 20, power: 0, count: 0 },
-                { id: '005', name: "Conner Shaking in the Rain", desc: "Vibrating with cold energy.", baseCost: 10000, cps: 80, power: 0, count: 0 },
-                { id: '006', name: "Brick", desc: "It's literally just a brick.", baseCost: 40000, cps: 200, power: 50, count: 0 },
-                { id: '007', name: "Ripped jeans", desc: "Maximum ventilation.", baseCost: 150000, cps: 600, power: 0, count: 0 },
-                { id: '008', name: "Wet Underwear", desc: "Uncomfortable, keeps you awake.", baseCost: 500000, cps: 2000, power: 0, count: 0 },
-                { id: '009', name: "Straight Hair", desc: "Aerodynamic clicking speed.", baseCost: 3000000, cps: 8000, power: 500, count: 0 },
-                { id: '010', name: "Am I Invited", desc: "Asking again just to be sure.", baseCost: 15000000, cps: 40000, power: 0, count: 0 },
-                { id: '011', name: "Conner's Group Chat", desc: "He actually replied to you.", baseCost: 25000000, cps: 60000, power: 0, count: 0 },
-                { id: '012', name: "Conner's Plus One", desc: "You are walking in with him.", baseCost: 40000000, cps: 85000, power: 0, count: 0 },
-                { id: '013', name: "Sitting Next to Conner", desc: "You can hear him breathing.", baseCost: 65000000, cps: 110000, power: 2500, count: 0 },
-                { id: '014', name: "No Maidens?", desc: "She gave you a fake number.", baseCost: 85000000, cps: 130000, power: 0, count: 0 },
-                { id: '015', name: "Instagram Reel Scroller", desc: "The sun is a myth. Reels are addicting.", baseCost: 120000000, cps: 0, power: 5000, count: 0 },
-                { id: '016', name: "Unopened Snapchats", desc: "47 delivered. 0 opened.", baseCost: 160000000, cps: 200000, power: 0, count: 0 },
-                { id: '017', name: "TAJ Finale", desc: "The Ultimate Conclusion.", baseCost: 1000000000, cps: 500000, power: 10000, count: 0 }
+                { id: '001', name: "Chopped", desc: "Admit you're chopped. It hurts, but makes you stronger.", baseCost: 15, cps: 0, power: 1, count: 0 },
+                { id: '002', name: "Deodorant", desc: "Small but strong improvement.", baseCost: 100, cps: 1, power: 0, count: 0 },
+                { id: '003', name: "Cold Showers", desc: "Relaxes and tones your mind, while also firming your body.", baseCost: 500, cps: 5, power: 5, count: 0 },
+                { id: '004', name: "Aurafarm", desc: "Start leaning against walls while on hoverboards. People around you start to see you as a lone wolf.", baseCost: 2000, cps: 20, power: 0, count: 0 },
+                { id: '005', name: "Mew", desc: "Passive, life-changing, riveting.", baseCost: 10000, cps: 80, power: 0, count: 0 },
+                { id: '006', name: "Exercise", desc: "Your body transforms by the day. People can finally see your muscles.", baseCost: 40000, cps: 200, power: 50, count: 0 },
+                { id: '007', name: "Skincare Routine", desc: "Softer skin, higher pitched voice. Everything is going to plan.", baseCost: 150000, cps: 600, power: 0, count: 0 },
+                { id: '008', name: "Juice", desc: "Being natural just won't cut it anymore.", baseCost: 500000, cps: 2000, power: 0, count: 0 },
+                { id: '009', name: "Haircut", desc: "Pricey, but always worth it.", baseCost: 3000000, cps: 8000, power: 500, count: 0 },
+                { id: '010', name: "Botted Followers", desc: "Your social media grows, it's time for phase 2.", baseCost: 15000000, cps: 40000, power: 0, count: 0 },
+                { id: '011', name: "Dropshipping", desc: "The elderly flock to your sites.", baseCost: 25000000, cps: 60000, power: 0, count: 0 },
+                { id: '012', name: "Course Selling", desc: "The young flock to your socials.", baseCost: 40000000, cps: 85000, power: 0, count: 0 },
+                { id: '013', name: "Rug Pulling", desc: "Each rugpull feeds your ego, you now see that your power truly has no limitations.", baseCost: 65000000, cps: 110000, power: 2500, count: 0 },
+                { id: '014', name: "Go Outside", desc: "You finally have the confidence to go outside. You stare at everyone, judging them from the inside.", baseCost: 85000000, cps: 130000, power: 0, count: 0 },
+                { id: '015', name: "Bodyguards", desc: "Your wealth supplies your new found guardians. They watch over you.", baseCost: 120000000, cps: 0, power: 5000, count: 0 },
+                { id: '016', name: "New Glasses", desc: "A fresh new pair. Not a nerd anymore, but an intellect. People around stare in awe. It is the only remnant of your past.", baseCost: 160000000, cps: 200000, power: 0, count: 0 },
+                { id: '017', name: "Flex", desc: "You throw away loaded bank accounts like pennies. Everyone becomes moths to your flame.", baseCost: 1000000000, cps: 500000, power: 10000, count: 0 }
             ]
         };
 
@@ -836,8 +836,8 @@
             store: document.getElementById('storeList')
         };
 
-        const FIXED_IMAGE = 'https://i.imgur.com/MAVFzZn.png';
-        const SCREAM_WORD = 'CORNER!';
+        const FIXED_IMAGE = 'https://i.imgur.com/hQF2nOe.jpeg';
+        const SCREAM_WORD = 'CHOPPED!';
 
         function init() {
             loadGame();
